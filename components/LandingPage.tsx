@@ -25,10 +25,10 @@ const CAPABILITIES_VIDEO =
   "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260418_094631_d30ab262-45ee-4b7d-99f3-5d5848c8ef13.mp4";
 
 const NAV_LINKS = [
-  { text: "首页", href: "http://localhost:5678" },
-  { text: "控制台", href: "http://127.0.0.1:3002/dashboard/overview" },
-  { text: "模型广场", href: "http://127.0.0.1:3002/pricing" },
-  { text: "文档", href: "http://127.0.0.1:3002/dashboard/overview" },
+  { text: "首页", href: "https://token.txsw.top/" },
+  { text: "控制台", href: "https://token.txsw.top/dashboard/overview" },
+  { text: "模型广场", href: "https://token.txsw.top/pricing" },
+  { text: "文档", href: "https://token.txsw.top/dashboard/overview" },
 ];
 
 const PARTNERS = ["Aeon", "Vela", "Apex", "Orbit", "Zeno"];
@@ -644,7 +644,7 @@ function PricingSection() {
 
             {/* CTA */}
             <a
-              href="http://127.0.0.1:3002/wallet"
+              href="https://token.txsw.top/wallet"
               className="mt-6 rounded-full px-5 py-2.5 text-sm font-semibold font-body flex items-center justify-center gap-2 transition-opacity hover:opacity-80 liquid-glass text-white"
             >
               {tier.name === "Free" ? "免费开始" : "立即订阅"}
@@ -757,7 +757,7 @@ function HeroSection() {
                 </a>
               ))}
               <a
-                href="http://127.0.0.1:3002/sign-in"
+                href="https://token.txsw.top/sign-in"
                 className="bg-white text-black rounded-full px-4 py-2 text-sm font-semibold flex items-center gap-1.5 whitespace-nowrap hover:bg-white/90 transition-colors font-body"
               >
                 免费试用

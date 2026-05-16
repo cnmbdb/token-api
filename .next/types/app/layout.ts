@@ -1,4 +1,4 @@
-// File: /Users/a2333/IDE/dujiao-next-ws/token-api/app/layout.tsx
+// File: /Users/a2333/IDE/token-api/app/layout.tsx
 import * as entry from '../../../app/layout.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

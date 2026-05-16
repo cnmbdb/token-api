@@ -99,7 +99,7 @@
         "transform": "lodash/{{member}}"
       }
     },
-    "outputFileTracingRoot": "/Users/a2333/IDE/dujiao-next-ws/token-api",
+    "outputFileTracingRoot": "/Users/a2333/IDE/token-api",
     "experimental": {
       "useSkewCookie": false,
       "cacheLife": {
@@ -289,10 +289,10 @@
     "bundlePagesRouterDependencies": false,
     "configFileName": "next.config.ts",
     "turbopack": {
-      "root": "/Users/a2333/IDE/dujiao-next-ws/token-api"
+      "root": "/Users/a2333/IDE/token-api"
     }
   },
-  "appDir": "/Users/a2333/IDE/dujiao-next-ws/token-api",
+  "appDir": "/Users/a2333/IDE/token-api",
   "relativeAppDir": "",
   "files": [
     ".next/routes-manifest.json",

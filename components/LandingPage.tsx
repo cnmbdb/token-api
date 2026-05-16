@@ -644,7 +644,7 @@ function PricingSection() {
 
             {/* CTA */}
             <a
-              href="https://token.txsw.top/wallet"
+              href="https://token.macosabc.com/wallet"
               className="mt-6 rounded-full px-5 py-2.5 text-sm font-semibold font-body flex items-center justify-center gap-2 transition-opacity hover:opacity-80 liquid-glass text-white"
             >
               {tier.name === "Free" ? "免费开始" : "立即订阅"}
@@ -757,7 +757,7 @@ function HeroSection() {
                 </a>
               ))}
               <a
-                href="https://token.txsw.top/sign-in"
+                href="https://token.macosabc.com/sign-in"
                 className="bg-white text-black rounded-full px-4 py-2 text-sm font-semibold flex items-center gap-1.5 whitespace-nowrap hover:bg-white/90 transition-colors font-body"
               >
                 免费试用

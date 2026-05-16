@@ -25,10 +25,10 @@ const CAPABILITIES_VIDEO =
   "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260418_094631_d30ab262-45ee-4b7d-99f3-5d5848c8ef13.mp4";
 
 const NAV_LINKS = [
-  { text: "首页", href: "https://tokenapi.txsw.top/" },
-  { text: "控制台", href: "https://token.txsw.top/dashboard/overview" },
-  { text: "模型广场", href: "https://token.txsw.top/pricing" },
-  { text: "文档", href: "https://token.txsw.top/dashboard/overview" },
+  { text: "首页", href: "https://token.macosabc.com/" },
+  { text: "控制台", href: "https://token.macosabc.com/dashboard/overview" },
+  { text: "模型广场", href: "https://token.macosabc.com/pricing" },
+  { text: "文档", href: "https://token.macosabc.com/rankings" },
 ];
 
 const PARTNERS = ["Aeon", "Vela", "Apex", "Orbit", "Zeno"];

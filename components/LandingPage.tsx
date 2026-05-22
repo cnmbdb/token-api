@@ -773,6 +773,8 @@ function HeroSection() {
             className="md:hidden w-10 h-10 flex items-center justify-center"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="菜单"
+            aria-expanded={mobileMenuOpen}
+            aria-controls="mobile-menu"
           >
             {mobileMenuOpen ? (
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -790,7 +792,7 @@ function HeroSection() {
         </div>
 
         {mobileMenuOpen && (
-          <div className="md:hidden mt-2 liquid-glass rounded-2xl p-4">
+          <div id="mobile-menu" className="md:hidden mt-2 liquid-glass rounded-2xl p-4">
             <div className="flex flex-col gap-2">
               {NAV_LINKS.map((link) => (
                 <a

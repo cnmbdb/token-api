@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import FadingVideo from "./FadingVideo";
 
 const CONSOLE_ERROR_FILTER = (original: typeof console.error) =>
@@ -455,7 +455,7 @@ function CarouselRow({
 function ModelsSection() {
   return (
     <section
-      className="relative py-20 overflow-hidden"
+      className="relative py-16 md:py-20 px-4 md:px-8 lg:px-16 overflow-hidden"
       style={{ background: "#000" }}
     >
       {/* Background video */}
@@ -543,11 +543,11 @@ function ModelsSection() {
 function PricingSection() {
   return (
     <section
-      className="relative py-24 px-8 md:px-16 lg:px-20"
+      className="relative py-16 md:py-24 px-4 md:px-8 lg:px-16"
       style={{ background: "#000" }}
     >
       {/* Section header */}
-      <div className="mb-16 text-center">
+      <div className="mb-8 md:mb-16 text-center">
         <p className="liquid-glass rounded-full px-4 py-2 text-sm font-body text-white/90 mb-6 inline-block">
           订阅方案
         </p>
@@ -568,14 +568,14 @@ function PricingSection() {
       </div>
 
       {/* Tier cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 max-w-6xl mx-auto px-2">
         {PRICING_TIERS.map((tier) => (
           <div
             key={tier.name}
             className="relative group"
           >
             <div
-              className={`liquid-glass rounded-[1.25rem] p-6 flex flex-col transition-transform duration-300 ease-out group-hover:scale-110 ${
+              className={`liquid-glass rounded-[1.25rem] p-5 md:p-6 flex flex-col transition-transform duration-300 ease-out group-hover:scale-105 md:group-hover:scale-110 ${
                 tier.highlight ? "ring-1 ring-white/30" : ""
               }`}
             >
@@ -644,7 +644,7 @@ function PricingSection() {
             {/* CTA */}
             <a
               href="https://token.macosabc.com/wallet"
-              className="mt-6 rounded-full px-5 py-2.5 text-sm font-semibold font-body flex items-center justify-center gap-2 transition-opacity hover:opacity-80 liquid-glass text-white"
+              className="mt-4 md:mt-6 rounded-full px-4 md:px-5 py-2 md:py-2.5 text-sm font-semibold font-body flex items-center justify-center gap-2 transition-opacity hover:opacity-80 liquid-glass text-white"
             >
               {tier.name === "Free" ? "免费开始" : "立即订阅"}
               <svg
@@ -674,6 +674,7 @@ function PricingSection() {
 function HeroSection() {
   const containerRef = useRef<HTMLDivElement>(null);
   const visible = useRef(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const el = containerRef.current;
@@ -720,12 +721,12 @@ function HeroSection() {
       />
 
       <nav
-        className="fixed top-4 px-8 lg:px-16 z-50 w-full"
+        className="fixed top-4 px-4 md:px-8 lg:px-16 z-50 w-full"
         style={{ maxWidth: "1200px", left: "50%", transform: "translateX(-50%)" }}
       >
-        <div className="liquid-glass rounded-full px-8 py-4 flex items-center justify-between">
-          <div className="liquid-glass rounded-full w-12 h-12 flex items-center justify-center flex-shrink-0">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <div className="liquid-glass rounded-full px-4 md:px-8 py-3 md:py-4 flex items-center justify-between">
+          <div className="liquid-glass rounded-full w-10 h-10 md:w-12 md:h-12 flex items-center justify-center flex-shrink-0">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <g clipPath="url(#ai-ac-clip)">
                 <path d="M8.53003 21.9601C8.12003 21.9601 7.78003 21.6201 7.78003 21.2101V19.2101C7.78003 18.8001 8.12003 18.4601 8.53003 18.4601C8.94003 18.4601 9.28003 18.8001 9.28003 19.2101V21.2101C9.28003 21.6201 8.94003 21.9601 8.53003 21.9601Z" fill="white"/>
                 <path d="M12.53 21.9601C12.12 21.9601 11.78 21.6201 11.78 21.2101V19.2101C11.78 18.8001 12.12 18.4601 12.53 18.4601C12.94 18.4601 13.28 18.8001 13.28 19.2101V21.2101C13.28 21.6201 12.94 21.9601 12.53 21.9601Z" fill="white"/>
@@ -768,11 +769,56 @@ function HeroSection() {
             </div>
           </div>
 
-          <div className="md:hidden w-12" />
+          <button
+            className="md:hidden w-10 h-10 flex items-center justify-center"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="菜单"
+          >
+            {mobileMenuOpen ? (
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            ) : (
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="3" y1="6" x2="21" y2="6" />
+                <line x1="3" y1="12" x2="21" y2="12" />
+                <line x1="3" y1="18" x2="21" y2="18" />
+              </svg>
+            )}
+          </button>
         </div>
+
+        {mobileMenuOpen && (
+          <div className="md:hidden mt-2 liquid-glass rounded-2xl p-4">
+            <div className="flex flex-col gap-2">
+              {NAV_LINKS.map((link) => (
+                <a
+                  key={link.text}
+                  href={link.href}
+                  className="px-4 py-3 text-sm font-medium text-white/90 font-body rounded-full hover:bg-white/10 transition-colors"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {link.text}
+                </a>
+              ))}
+              <a
+                href="https://token.macosabc.com/sign-in"
+                className="bg-white text-black rounded-full px-4 py-3 text-sm font-semibold flex items-center justify-center gap-2 mt-2"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                免费试用
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M7 17L17 7" />
+                  <path d="M7 7h10v10" />
+                </svg>
+              </a>
+            </div>
+          </div>
+        )}
       </nav>
 
-      <div className="relative z-10 flex flex-col items-center flex-1 justify-center pt-36 px-4 w-full">
+      <div className="relative z-10 flex flex-col items-center flex-1 justify-center pt-24 md:pt-36 px-4 md:px-6 w-full">
         <div
           {...staggerProps(0.4)}
           className="liquid-glass rounded-full px-1.5 py-1.5 flex items-center gap-2 mb-14"
@@ -806,7 +852,7 @@ function HeroSection() {
           智能路由自动选择最优路径，成本直降70%。
         </p>
 
-        <div {...staggerProps(1.1)} className="flex items-center gap-6 mt-6">
+        <div {...staggerProps(1.1)} className="flex flex-col sm:flex-row items-center gap-4 md:gap-6 mt-6">
           <a
             href="#"
             className="liquid-glass-strong rounded-full px-5 py-2.5 text-sm font-semibold text-white flex items-center gap-2 hover:opacity-90 transition-opacity font-body"
@@ -828,7 +874,7 @@ function HeroSection() {
           </a>
         </div>
 
-        <div {...staggerProps(1.3)} className="flex items-stretch gap-4 mt-8">
+        <div {...staggerProps(1.3)} className="flex flex-col sm:flex-row items-stretch gap-4 mt-8 w-full max-w-md sm:max-w-none">
           {[
             {
               icon: (
@@ -852,7 +898,7 @@ function HeroSection() {
               label: "日均Token处理量",
             },
           ].map((stat, i) => (
-            <div key={i} className="liquid-glass rounded-[1.25rem] p-5 w-[220px] flex flex-col">
+            <div key={i} className="liquid-glass rounded-[1.25rem] p-4 md:p-5 flex flex-col flex-1">
               <div className="mb-3">{stat.icon}</div>
               <div className="font-heading font-bold text-white text-4xl tracking-[-1px] leading-none">
                 {stat.number}
@@ -915,7 +961,7 @@ function CapabilitiesSection() {
         style={{ height: "30%", background: "linear-gradient(to top, #000 0%, transparent 100%)" }}
       />
 
-      <div className="relative z-10 px-8 md:px-16 lg:px-20 pt-24 pb-10 flex flex-col min-h-screen">
+      <div className="relative z-10 px-4 md:px-8 lg:px-16 pt-16 md:pt-24 pb-8 md:pb-10 flex flex-col min-h-[80vh] md:min-h-screen">
         <div className="mb-auto">
           <h2
             {...staggerProps(0.2)}
@@ -934,7 +980,7 @@ function CapabilitiesSection() {
           {FEATURE_CARDS.map((card) => (
             <div
               key={card.title}
-              className="liquid-glass rounded-[1.25rem] p-6 min-h-[360px] flex flex-col"
+              className="liquid-glass rounded-[1.25rem] p-5 md:p-6 min-h-[280px] md:min-h-[360px] flex flex-col"
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="liquid-glass rounded-[0.75rem] w-11 h-11 flex items-center justify-center flex-shrink-0">

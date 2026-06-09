@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface FadingVideoProps {
   src: string;
   className?: string;
   style?: React.CSSProperties;
+  loadMode?: "eager" | "visible";
 }
 
 const FADE_MS = 600;
@@ -54,14 +55,55 @@ function fadeTo(
   });
 }
 
-export default function FadingVideo({ src, className, style }: FadingVideoProps) {
+export default function FadingVideo({
+  src,
+  className,
+  style,
+  loadMode = "visible",
+}: FadingVideoProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
   const videoARef = useRef<HTMLVideoElement>(null);
   const videoBRef = useRef<HTMLVideoElement>(null);
   const activeRef = useRef<"a" | "b">("a");
   const switchingRef = useRef(false);
   const startedRef = useRef(false);
-  const aReadyRef = useRef(false);
-  const bReadyRef = useRef(false);
+  const visibleRef = useRef(loadMode === "eager");
+  const [shouldLoad, setShouldLoad] = useState(loadMode === "eager");
+
+  useEffect(() => {
+    if (loadMode === "eager") {
+      visibleRef.current = true;
+      setShouldLoad(true);
+      return;
+    }
+
+    const container = containerRef.current;
+    if (!container) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry) return;
+
+        if (entry.isIntersecting) {
+          visibleRef.current = true;
+          setShouldLoad(true);
+
+          const activeVideo =
+            activeRef.current === "a" ? videoARef.current : videoBRef.current;
+          activeVideo?.play().catch(() => {});
+          return;
+        }
+
+        visibleRef.current = false;
+        videoARef.current?.pause();
+        videoBRef.current?.pause();
+      },
+      { rootMargin: "300px 0px" }
+    );
+
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, [loadMode]);
 
   useEffect(() => {
     const videoA = videoARef.current!;
@@ -83,6 +125,7 @@ export default function FadingVideo({ src, className, style }: FadingVideoProps)
       standby.style.opacity = "0";
 
       try {
+        standby.preload = "metadata";
         await standby.play();
       } catch {}
 
@@ -106,20 +149,15 @@ export default function FadingVideo({ src, className, style }: FadingVideoProps)
     }
 
     function handleLoadedDataA() {
-      aReadyRef.current = true;
       if (startedRef.current) return;
+      if (!visibleRef.current) return;
       startedRef.current = true;
       videoA.play().catch(() => {});
       fadeTo(vidA, 1, FADE_MS);
     }
 
-    function handleLoadedDataB() {
-      bReadyRef.current = true;
-    }
-
     videoA.addEventListener("loadeddata", handleLoadedDataA);
     videoA.addEventListener("ended", handleEndedA);
-    videoB.addEventListener("loadeddata", handleLoadedDataB);
     videoB.addEventListener("ended", handleEndedB);
 
     return () => {
@@ -127,7 +165,6 @@ export default function FadingVideo({ src, className, style }: FadingVideoProps)
       cancelFade(vidB);
       videoA.removeEventListener("loadeddata", handleLoadedDataA);
       videoA.removeEventListener("ended", handleEndedA);
-      videoB.removeEventListener("loadeddata", handleLoadedDataB);
       videoB.removeEventListener("ended", handleEndedB);
       videoA.pause();
       videoB.pause();
@@ -135,28 +172,28 @@ export default function FadingVideo({ src, className, style }: FadingVideoProps)
   }, []);
 
   return (
-    <>
+    <div ref={containerRef} className={className} style={style}>
       <video
         ref={videoARef}
-        src={src}
+        src={shouldLoad ? src : undefined}
         autoPlay
         muted
         playsInline
-        preload="auto"
+        preload={loadMode === "eager" ? "metadata" : "none"}
         loop={false}
-        className={className}
-        style={{ opacity: 0, ...style }}
+        className="absolute inset-0 h-full w-full object-cover"
+        style={{ opacity: 0 }}
       />
       <video
         ref={videoBRef}
-        src={src}
+        src={shouldLoad ? src : undefined}
         muted
         playsInline
-        preload="auto"
+        preload="none"
         loop={false}
-        className={className}
-        style={{ opacity: 0, ...style }}
+        className="absolute inset-0 h-full w-full object-cover"
+        style={{ opacity: 0 }}
       />
-    </>
+    </div>
   );
 }

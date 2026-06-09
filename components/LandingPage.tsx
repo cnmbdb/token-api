@@ -20,8 +20,9 @@ if (typeof window !== "undefined") {
   console.error = CONSOLE_ERROR_FILTER(console.error.bind(console));
 }
 
-const HERO_VIDEO = "/bg.mov";
-const CAPABILITIES_VIDEO = "/capabilities.mp4";
+const HERO_VIDEO = "/web/bg-web.mp4";
+const CAPABILITIES_VIDEO = "/web/capabilities-web.mp4";
+const MODELS_VIDEO = "/web/models-bg-web.mp4";
 
 const NAV_LINKS = [
   { text: "首页", href: "https://token.macosabc.com/" },
@@ -460,8 +461,9 @@ function ModelsSection() {
     >
       {/* Background video */}
       <FadingVideo
-        src="/models-bg.mp4"
+        src={MODELS_VIDEO}
         className="absolute inset-0 w-full h-full object-cover z-0"
+        loadMode="visible"
       />
 
       {/* Top fade gradient */}
@@ -709,6 +711,7 @@ function HeroSection() {
       <FadingVideo
         src={HERO_VIDEO}
         className="absolute inset-0 w-full h-full object-cover z-0"
+        loadMode="eager"
       />
 
       <div
@@ -952,6 +955,7 @@ function CapabilitiesSection() {
         src={CAPABILITIES_VIDEO}
         className="absolute inset-0 w-full h-full object-cover z-0"
         style={{ width: "100%", height: "100%" }}
+        loadMode="visible"
       />
 
       <div

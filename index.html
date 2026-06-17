@@ -299,31 +299,87 @@
 
     .model-cloud {
       position: relative;
-      width: min(100%, 540px);
-      height: clamp(245px, 25vw, 292px);
+      width: min(100%, 430px);
+      height: clamp(270px, 29vw, 340px);
       transform-style: preserve-3d;
     }
 
-    .model-card {
+    .model-cloud::before,
+    .model-cloud::after {
+      content: "";
       position: absolute;
-      width: clamp(96px, 10vw, 124px);
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    .model-cloud::before {
+      width: min(78%, 340px);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.11), rgba(255, 255, 255, 0.035) 34%, transparent 72%);
+      filter: blur(20px);
+    }
+
+    .model-cloud::after {
+      width: min(46%, 190px);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.08), transparent 70%);
+      filter: blur(26px);
+    }
+
+    .orbit-track {
+      position: absolute;
+      inset: 0;
+      transform-origin: 50% 50%;
+      transform-style: preserve-3d;
+      will-change: transform;
+    }
+
+    .orbit-slot {
+      --angle: 0deg;
+      --radius: clamp(68px, 8vw, 106px);
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: clamp(112px, 12vw, 148px);
+      aspect-ratio: 1;
+      transform: translate(-50%, -50%) rotate(var(--angle)) translateX(var(--radius)) rotate(calc(var(--angle) * -1));
+      transform-origin: center;
+      transform-style: preserve-3d;
+    }
+
+    .orbit-slot:nth-child(1) { --angle: -90deg; }
+    .orbit-slot:nth-child(2) { --angle: -30deg; }
+    .orbit-slot:nth-child(3) { --angle: 30deg; }
+    .orbit-slot:nth-child(4) { --angle: 90deg; }
+    .orbit-slot:nth-child(5) { --angle: 150deg; }
+    .orbit-slot:nth-child(6) { --angle: 210deg; }
+
+    .model-card {
+      position: relative;
+      width: 100%;
       aspect-ratio: 1;
       display: grid;
       place-items: center;
       border: 1px solid rgba(255, 255, 255, 0.16);
-      border-radius: 28px;
-      color: rgba(255, 255, 255, 0.88);
+      border-radius: 30px;
+      color: rgba(255, 255, 255, 0.72);
       background:
-        linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.045) 46%, rgba(255, 255, 255, 0.02)),
-        rgba(255, 255, 255, 0.06);
+        radial-gradient(circle at 28% 18%, rgba(255, 255, 255, 0.16), transparent 36%),
+        linear-gradient(145deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.025) 48%, rgba(0, 0, 0, 0.24)),
+        rgba(24, 26, 25, 0.44);
       box-shadow:
-        0 22px 58px rgba(0, 0, 0, 0.44),
-        0 0 36px rgba(255, 255, 255, 0.075),
-        inset 0 1px 0 rgba(255, 255, 255, 0.18),
-        inset 0 -24px 38px rgba(0, 0, 0, 0.22);
-      backdrop-filter: blur(18px) saturate(1.4);
-      -webkit-backdrop-filter: blur(18px) saturate(1.4);
-      font-size: clamp(19px, 2vw, 28px);
+        0 18px 46px rgba(0, 0, 0, 0.54),
+        0 0 26px rgba(255, 255, 255, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.26),
+        inset 1px 0 0 rgba(255, 255, 255, 0.08),
+        inset 0 -28px 44px rgba(0, 0, 0, 0.34);
+      backdrop-filter: blur(20px) saturate(1.25);
+      -webkit-backdrop-filter: blur(20px) saturate(1.25);
+      font-size: clamp(16px, 1.5vw, 21px);
       font-weight: 950;
       transform-origin: center;
       will-change: transform;
@@ -333,26 +389,26 @@
       content: attr(data-logo);
       display: grid;
       place-items: center;
-      width: 58%;
+      width: 56%;
       aspect-ratio: 1;
-      border-radius: 22px;
-      color: rgba(255, 255, 255, 0.88);
+      border-radius: 20px;
+      color: rgba(255, 255, 255, 0.62);
       background:
-        radial-gradient(circle at 30% 18%, rgba(255, 255, 255, 0.28), transparent 34%),
-        rgba(255, 255, 255, 0.08);
+        radial-gradient(circle at 30% 18%, rgba(255, 255, 255, 0.18), transparent 36%),
+        rgba(255, 255, 255, 0.045);
       box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.24),
-        0 12px 28px rgba(0, 0, 0, 0.32);
-      font-size: 0.72em;
+        inset 0 1px 0 rgba(255, 255, 255, 0.16),
+        0 10px 24px rgba(0, 0, 0, 0.34);
+      font-size: 0.64em;
       letter-spacing: -0.04em;
     }
 
-    .model-card:nth-child(1) { left: 37%; top: 0; transform: rotate(-18deg); }
-    .model-card:nth-child(2) { left: 56%; top: 7%; transform: rotate(16deg); }
-    .model-card:nth-child(3) { left: 24%; top: 27%; transform: rotate(-12deg); }
-    .model-card:nth-child(4) { left: 50%; top: 39%; transform: rotate(33deg); }
-    .model-card:nth-child(5) { left: 42%; top: 51%; transform: rotate(-7deg); }
-    .model-card:nth-child(6) { left: 66%; top: 31%; transform: rotate(-23deg); opacity: 0.72; }
+    .orbit-slot:nth-child(1) .model-card { rotate: -10deg; }
+    .orbit-slot:nth-child(2) .model-card { rotate: 8deg; }
+    .orbit-slot:nth-child(3) .model-card { rotate: -7deg; }
+    .orbit-slot:nth-child(4) .model-card { rotate: 10deg; }
+    .orbit-slot:nth-child(5) .model-card { rotate: -8deg; }
+    .orbit-slot:nth-child(6) .model-card { rotate: 7deg; opacity: 0.78; }
 
     .metrics {
       display: grid;
@@ -755,12 +811,14 @@
 
       <div class="hero-board" aria-hidden="true">
         <div class="model-cloud">
-          <div class="model-card model-gpt" data-logo="GPT"></div>
-          <div class="model-card model-claude" data-logo="Claude"></div>
-          <div class="model-card model-gemini" data-logo="Gemini"></div>
-          <div class="model-card model-glm" data-logo="GLM"></div>
-          <div class="model-card model-deepseek" data-logo="DeepSeek"></div>
-          <div class="model-card model-kimi" data-logo="Kimi"></div>
+          <div class="orbit-track">
+            <div class="orbit-slot"><div class="model-card model-gpt" data-logo="GPT"></div></div>
+            <div class="orbit-slot"><div class="model-card model-claude" data-logo="Claude"></div></div>
+            <div class="orbit-slot"><div class="model-card model-gemini" data-logo="Gemini"></div></div>
+            <div class="orbit-slot"><div class="model-card model-glm" data-logo="GLM"></div></div>
+            <div class="orbit-slot"><div class="model-card model-deepseek" data-logo="DeepSeek"></div></div>
+            <div class="orbit-slot"><div class="model-card model-kimi" data-logo="Kimi"></div></div>
+          </div>
         </div>
       </div>
     </section>
@@ -909,16 +967,17 @@ var module=undefined,exports=undefined,define=undefined;
           .from(".eyebrow", { autoAlpha: 0, y: 14, duration: 0.36 }, "-=0.24")
           .from(".headline-line", { autoAlpha: 0, y: 36, rotation: -1.5, stagger: 0.055, duration: 0.46 }, "-=0.22")
           .from(".lead, .actions", { autoAlpha: 0, y: 18, stagger: 0.08, duration: 0.42 }, "-=0.18")
-          .from(".model-card", { autoAlpha: 0, x: 0, y: 44, scale: 0.72, rotation: 0, stagger: { amount: 0.34, from: "center" }, ease: "back.out(1.45)" }, "-=0.32")
+          .from(".model-card", { autoAlpha: 0, y: 28, scale: 0.42, stagger: { amount: 0.34, from: "center" }, ease: "back.out(1.35)" }, "-=0.32")
           .from(".metric", { autoAlpha: 0, y: 22, stagger: 0.055 }, "-=0.18");
 
-        gsap.to(".model-cloud", { rotation: 1.2, duration: 5.4, repeat: -1, yoyo: true, ease: "sine.inOut" });
+        gsap.to(".orbit-track", { rotation: 360, duration: 42, delay: 1.2, repeat: -1, ease: "none" });
+        gsap.to(".model-cloud", { scale: 1.035, duration: 4.8, delay: 1.2, repeat: -1, yoyo: true, ease: "sine.inOut" });
         gsap.utils.toArray(".model-card").forEach(function (card, index) {
           gsap.to(card, {
-            y: index % 2 ? 14 : -14,
-            x: index % 3 ? 8 : -8,
-            rotation: index % 2 ? "+=4" : "-=4",
-            duration: 3.2 + index * 0.22,
+            y: index % 2 ? 12 : -12,
+            scale: index % 2 ? 0.985 : 1.018,
+            duration: 3.4 + index * 0.18,
+            delay: 1.2,
             repeat: -1,
             yoyo: true,
             ease: "sine.inOut"
@@ -1003,10 +1062,10 @@ var module=undefined,exports=undefined,define=undefined;
 
       document.querySelectorAll(".model-card").forEach(function (card) {
         card.addEventListener("mouseenter", function () {
-          gsap.to(card, { scale: 1.08, filter: "brightness(1.18)", duration: 0.26, ease: "power2.out", overwrite: "auto" });
+          gsap.to(card, { filter: "brightness(1.22)", duration: 0.26, ease: "power2.out", overwrite: "auto" });
         });
         card.addEventListener("mouseleave", function () {
-          gsap.to(card, { scale: 1, filter: "brightness(1)", duration: 0.24, ease: "power2.out", overwrite: "auto" });
+          gsap.to(card, { filter: "brightness(1)", duration: 0.24, ease: "power2.out", overwrite: "auto" });
         });
       });
     })();

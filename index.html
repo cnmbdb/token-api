@@ -84,23 +84,11 @@
     .brand {
       display: inline-flex;
       align-items: center;
-      gap: 10px;
-      padding: 8px 16px 8px 10px;
+      gap: 0;
+      padding: 8px 18px;
       border-radius: 999px;
       font-weight: 950;
       letter-spacing: 0;
-    }
-
-    .mark {
-      width: 42px;
-      aspect-ratio: 1;
-      display: grid;
-      place-items: center;
-      border-radius: 50%;
-      color: #fff;
-      background: #101412;
-      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.16);
-      font-weight: 950;
     }
 
     .nav {
@@ -673,11 +661,11 @@
       }
 
       .brand {
-        padding-right: 4px;
+        padding: 8px 4px;
       }
 
       .brand strong {
-        display: none;
+        display: inline;
       }
 
       .login {
@@ -751,7 +739,6 @@
   <main class="shell">
     <header class="topbar">
       <a class="brand" href="#top" aria-label="DujiAPI">
-        <span class="mark">D</span>
         <strong>DujiAPI</strong>
       </a>
       <nav class="nav" aria-label="主导航">

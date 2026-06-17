@@ -27,12 +27,19 @@
 
     html {
       scroll-behavior: smooth;
+      width: 100%;
+      max-width: 100%;
+      overflow-x: hidden;
+      overscroll-behavior-x: none;
     }
 
     body {
       margin: 0;
       min-height: 100vh;
+      width: 100%;
+      max-width: 100%;
       overflow-x: hidden;
+      overscroll-behavior-x: none;
       color: var(--ink);
       background: #000;
     }
@@ -55,8 +62,10 @@
 
     .shell {
       width: min(100%, 1440px);
+      max-width: 100vw;
       margin: 0 auto;
       padding: clamp(16px, 3vw, 44px);
+      overflow-x: clip;
     }
 
     .topbar {
@@ -843,10 +852,12 @@
         grid-template-columns: none;
         overflow-x: auto;
         overflow-y: hidden;
-        margin-inline: -22px;
-        padding-inline: 22px;
+        width: 100%;
+        margin-inline: 0;
+        padding-inline: 0;
         padding-bottom: 12px;
         scroll-snap-type: x mandatory;
+        overscroll-behavior-x: contain;
         -webkit-overflow-scrolling: touch;
       }
 

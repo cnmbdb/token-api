@@ -413,31 +413,102 @@
     .metrics {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 14px;
-      margin-top: 16px;
+      gap: 12px;
+      margin-top: 18px;
     }
 
     .metric {
-      min-height: 150px;
+      position: relative;
+      overflow: hidden;
+      min-height: 136px;
       display: grid;
-      align-content: end;
-      padding: 18px;
-      border: 1px solid rgba(16, 20, 18, 0.1);
-      border-radius: 24px;
-      background: rgba(255, 255, 255, 0.54);
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.66);
+      grid-template-columns: auto 1fr;
+      align-items: center;
+      gap: 18px;
+      padding: 22px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 16px;
+      color: rgba(255, 255, 255, 0.82);
+      background:
+        radial-gradient(circle at 25% 12%, rgba(255, 105, 180, 0.2), transparent 42%),
+        linear-gradient(110deg, rgba(68, 30, 73, 0.66), rgba(36, 24, 50, 0.74) 48%, rgba(111, 64, 30, 0.42)),
+        rgba(13, 10, 24, 0.82);
+      box-shadow:
+        0 18px 54px rgba(0, 0, 0, 0.36),
+        inset 0 1px 0 rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(18px) saturate(1.25);
+      -webkit-backdrop-filter: blur(18px) saturate(1.25);
     }
 
-    .metric strong {
-      font-size: clamp(32px, 4vw, 58px);
-      line-height: 1;
+    .metric:nth-child(2) {
+      background:
+        radial-gradient(circle at 50% 0%, rgba(180, 118, 255, 0.2), transparent 44%),
+        linear-gradient(110deg, rgba(86, 34, 45, 0.66), rgba(33, 25, 52, 0.78) 55%, rgba(82, 51, 42, 0.42)),
+        rgba(13, 10, 24, 0.82);
     }
 
-    .metric span {
-      margin-top: 10px;
-      color: var(--muted);
-      font-size: 14px;
-      font-weight: 800;
+    .metric:nth-child(3) {
+      background:
+        radial-gradient(circle at 20% 10%, rgba(188, 82, 255, 0.28), transparent 40%),
+        linear-gradient(110deg, rgba(70, 28, 86, 0.76), rgba(72, 38, 65, 0.7) 48%, rgba(128, 78, 30, 0.46)),
+        rgba(13, 10, 24, 0.82);
+    }
+
+    .metric::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, rgba(255, 255, 255, 0.1), transparent 28%, rgba(255, 255, 255, 0.06));
+      opacity: 0.65;
+      pointer-events: none;
+    }
+
+    .metric > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .metric-icon {
+      width: 58px;
+      aspect-ratio: 1;
+      display: grid;
+      place-items: center;
+      border-radius: 15px;
+      color: rgba(255, 255, 255, 0.92);
+      background:
+        radial-gradient(circle at 72% 28%, rgba(255, 95, 143, 0.75), transparent 16%),
+        radial-gradient(circle at 30% 72%, rgba(255, 189, 74, 0.68), transparent 18%),
+        linear-gradient(145deg, rgba(25, 54, 90, 0.92), rgba(5, 21, 38, 0.98));
+      box-shadow:
+        0 12px 28px rgba(0, 0, 0, 0.28),
+        inset 0 1px 0 rgba(255, 255, 255, 0.18);
+      font-size: 15px;
+      font-weight: 950;
+      letter-spacing: -0.04em;
+    }
+
+    .metric-icon img {
+      width: 30px;
+      height: 30px;
+      object-fit: contain;
+      filter: brightness(0) invert(1);
+    }
+
+    .metric-copy {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.66);
+      font-size: clamp(15px, 1.45vw, 24px);
+      line-height: 1.45;
+      font-weight: 700;
+    }
+
+    .metric-copy strong {
+      color: rgba(255, 255, 255, 0.92);
+      font-weight: 950;
+    }
+
+    .metric-copy span {
+      white-space: nowrap;
     }
 
     .section {
@@ -687,8 +758,7 @@
       }
 
       .feature-grid,
-      .pricing-grid,
-      .metrics {
+      .pricing-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
@@ -824,9 +894,18 @@
     </section>
 
     <div class="metrics" aria-label="关键指标">
-      <div class="metric"><strong>99.9%</strong><span>服务可用性</span></div>
-      <div class="metric"><strong>70%</strong><span>智能路由降低 Token 成本</span></div>
-      <div class="metric"><strong>1 API</strong><span>统一接入全球主流模型</span></div>
+      <article class="metric">
+        <div class="metric-icon"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/openai.svg" alt="OpenAI"></div>
+        <p class="metric-copy"><strong>GPT、Claude、Gemini 一站接入。</strong> 一个 Token API 串起全球主流模型。</p>
+      </article>
+      <article class="metric">
+        <div class="metric-icon"><img src="https://cdn.simpleicons.org/claude/ffffff" alt="Claude"></div>
+        <p class="metric-copy"><strong>智能路由自动切换。</strong> 高峰、故障、限速时请求仍然稳定可控。</p>
+      </article>
+      <article class="metric">
+        <div class="metric-icon"><img src="https://cdn.simpleicons.org/deepseek/ffffff" alt="DeepSeek"></div>
+        <p class="metric-copy"><strong>用量和成本清晰可见。</strong> 模型分布、Token 消耗、团队支出统一看。</p>
+      </article>
     </div>
 
     <section class="section" id="features">

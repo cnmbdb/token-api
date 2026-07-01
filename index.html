@@ -449,12 +449,37 @@
     }
 
     .metric strong {
-      display: block;
+      display: flex;
+      align-items: baseline;
+      height: 1.08em;
       margin-bottom: 8px;
+      overflow: hidden;
       font-size: 24px;
       line-height: 1;
       font-variant-numeric: tabular-nums;
-      transition: color 180ms ease, transform 180ms ease;
+    }
+
+    .digit-cell {
+      display: inline-grid;
+      place-items: end center;
+      min-width: 0.58em;
+      height: 1.08em;
+      overflow: hidden;
+    }
+
+    .digit-static,
+    .digit-roll {
+      display: block;
+      will-change: transform;
+    }
+
+    .digit-symbol {
+      min-width: auto;
+      overflow: visible;
+    }
+
+    .digit-symbol + .digit-symbol {
+      margin-left: 0.02em;
     }
 
     .metric small {
@@ -467,7 +492,36 @@
 
     .metric.is-ticking strong {
       color: var(--green);
-      transform: translateY(-1px);
+    }
+
+    .digit-roll.is-up {
+      animation: value-roll-up 360ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .digit-roll.is-down {
+      animation: value-roll-down 360ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    @keyframes value-roll-up {
+      0% {
+        opacity: 0;
+        transform: translateY(76%);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes value-roll-down {
+      0% {
+        opacity: 0;
+        transform: translateY(-76%);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .dashboard-grid {
@@ -900,15 +954,19 @@
 
       .site-header {
         grid-template-columns: auto auto;
+        min-height: 58px;
+        padding: 8px 10px 8px 14px;
       }
 
       .brand {
-        font-size: 18px;
+        font-size: 20px;
       }
 
       .nav-toggle {
         display: grid;
         justify-self: end;
+        width: 38px;
+        border-radius: 10px;
       }
 
       .site-nav,
@@ -936,7 +994,7 @@
       }
 
       .site-header.is-open .nav-actions {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
       .site-header.is-open .nav-toggle span {
@@ -953,20 +1011,73 @@
 
       .hero {
         padding: 46px 0 28px;
+        overflow: visible;
       }
 
       h1 {
-        font-size: clamp(40px, 12vw, 62px);
+        max-width: 100%;
+        font-size: clamp(36px, 10.6vw, 52px);
+        line-height: 1.08;
+        overflow-wrap: anywhere;
+      }
+
+      .hero-copy {
+        width: 100%;
+        max-width: 100%;
+      }
+
+      .metric-grid,
+      .dashboard-grid,
+      .bottom-grid {
+        grid-template-columns: 1fr;
       }
 
       .proof-row,
-      .metric-grid,
-      .dashboard-grid,
       .providers,
       .workflow,
-      .price-grid,
-      .bottom-grid {
-        grid-template-columns: 1fr;
+      .price-grid {
+        display: flex;
+        grid-template-columns: none;
+        gap: 12px;
+        width: calc(100% + 32px);
+        max-width: none;
+        margin-inline: -16px;
+        padding-inline: 16px;
+        overflow-x: auto;
+        overscroll-behavior-x: contain;
+        scroll-snap-type: x mandatory;
+        scrollbar-width: none;
+      }
+
+      .proof-row {
+        width: 100%;
+        margin-inline: 0;
+        padding-inline: 0;
+      }
+
+      .proof-row::-webkit-scrollbar,
+      .providers::-webkit-scrollbar,
+      .workflow::-webkit-scrollbar,
+      .price-grid::-webkit-scrollbar {
+        display: none;
+      }
+
+      .proof-item,
+      .provider,
+      .step,
+      .price-card {
+        flex: 0 0 min(78vw, 310px);
+        scroll-snap-align: start;
+      }
+
+      .providers-title {
+        flex: 0 0 min(74vw, 280px);
+        min-height: 92px;
+        scroll-snap-align: start;
+      }
+
+      .step::after {
+        display: none;
       }
 
       .console-body {
@@ -1019,7 +1130,24 @@
         align-items: stretch;
       }
 
-      .button {
+      .hero-actions {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+        width: 100%;
+        max-width: 100%;
+      }
+
+      .hero-actions .button {
+        min-width: 0;
+        width: 100%;
+        min-height: 50px;
+        padding-inline: 10px;
+        font-size: 14px;
+        white-space: normal;
+      }
+
+      .nav-actions .button {
         width: 100%;
       }
 
@@ -1112,7 +1240,7 @@
               <div class="console-title">
                 macosabc
               </div>
-              <span class="endpoint">https://api.macosabc.com/v1</span>
+              <span class="endpoint">https://token.macosabc.com/v1</span>
             </div>
             <div class="console-body">
               <aside class="side-menu" aria-label="控制台菜单">
@@ -1165,7 +1293,7 @@
                 </div>
                 <div class="code-panel" id="docs">
                   <div class="code-tabs"><span>cURL</span><span>Python</span><span>Node.js</span><span>Go</span></div>
-                  <pre><code>curl https://api.macosabc.com/v1/chat/completions \
+                  <pre><code>curl https://token.macosabc.com/v1/chat/completions \
   -H "Authorization: Bearer $MACOSABC_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -1184,12 +1312,12 @@
           <strong>接入主流模型</strong>
           <span>持续更新，一键切换</span>
         </div>
-        <div class="provider"><strong><i></i>OpenAI</strong><span>GPT-4o / 4o-mini</span></div>
-        <div class="provider"><strong><i></i>Claude</strong><span>Claude 3.5 Sonnet</span></div>
-        <div class="provider"><strong><i></i>Gemini</strong><span>Gemini 1.5 Pro</span></div>
-        <div class="provider"><strong><i></i>DeepSeek</strong><span>DeepSeek-V3 / R1</span></div>
-        <div class="provider"><strong><i></i>阿里云百炼</strong><span>Qwen 系列</span></div>
-        <div class="provider"><strong><i></i>字节跳动</strong><span>豆包大模型</span></div>
+        <div class="provider"><strong><i></i>OpenAI</strong><span>GPT-5.5 / 5.5 Pro</span></div>
+        <div class="provider"><strong><i></i>Claude</strong><span>Claude Opus 4.8</span></div>
+        <div class="provider"><strong><i></i>Gemini</strong><span>Gemini 3.1 Pro</span></div>
+        <div class="provider"><strong><i></i>DeepSeek</strong><span>V4 Pro / V4 Flash</span></div>
+        <div class="provider"><strong><i></i>OpenAI Mini</strong><span>GPT-5.4 mini</span></div>
+        <div class="provider"><strong><i></i>Claude Sonnet</strong><span>Claude Sonnet 5</span></div>
       </section>
 
       <section class="section">
@@ -1349,14 +1477,17 @@
 
     const random = seededRandom(hashString(`macosabc:${todayKey}`));
     const dailyBase = {
-      requests: Math.round(88000 + random() * 68000),
-      requestRate: 5 + random() * 28,
-      spend: 320 + random() * 360,
-      balance: 1100 + random() * 1450,
+      requestStart: Math.round(26000 + random() * 42000),
+      requestRate: 0.18 + random() * 0.42,
+      spendStart: 86 + random() * 190,
+      spendRate: 0.0014 + random() * 0.0022,
+      liveSpendRate: 0.01,
+      balanceStart: 1800 + random() * 2600,
       success: 99.68 + random() * 0.24,
       requestDelta: 6 + random() * 19,
       spendDelta: 4 + random() * 14
     };
+    const pageStartedAt = Date.now();
 
     const formatInt = new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 });
     const formatMoney = new Intl.NumberFormat("en-US", {
@@ -1367,27 +1498,53 @@
     });
 
     const wave = (time, offset, size) => Math.sin(time / size + offset) + Math.sin(time / (size * 0.43) + offset * 1.7) * 0.42;
+    const parseMetricNumber = (value) => Number(value.replace(/[$,%\s,]/g, ""));
+    const getMetricText = (node) => node.dataset.rawValue || node.textContent;
+    const renderMetricValue = (node, value, direction) => {
+      const previous = getMetricText(node);
+      node.dataset.rawValue = value;
+      node.setAttribute("aria-label", value);
+      node.innerHTML = Array.from(value).map((char, index) => {
+        const changed = previous[index] !== char;
+        const isNumeric = /[0-9]/.test(char);
+        const className = changed && isNumeric ? `digit-roll ${direction}` : "digit-static";
+        const cellClass = isNumeric ? "digit-cell" : "digit-cell digit-symbol";
+        return `<span class="${cellClass}" aria-hidden="true"><span class="${className}">${char}</span></span>`;
+      }).join("");
+    };
 
     const setMetric = (name, value, sub) => {
       const card = metricCards.find((item) => item.dataset.metric === name);
       if (!card) return;
-      card.querySelector("[data-value]").textContent = value;
-      card.querySelector("[data-sub]").textContent = sub;
-      card.classList.add("is-ticking");
-      window.setTimeout(() => card.classList.remove("is-ticking"), 190);
+      const valueNode = card.querySelector("[data-value]");
+      const subNode = card.querySelector("[data-sub]");
+      if (getMetricText(valueNode) !== value) {
+        const previous = parseMetricNumber(getMetricText(valueNode));
+        const next = parseMetricNumber(value);
+        const direction = Number.isFinite(previous) && Number.isFinite(next) && next < previous ? "is-down" : "is-up";
+        card.classList.remove("is-ticking", "is-up", "is-down");
+        card.classList.add(direction);
+        renderMetricValue(valueNode, value, direction);
+        void card.offsetWidth;
+        card.classList.add("is-ticking");
+        window.setTimeout(() => card.classList.remove("is-ticking", "is-up", "is-down"), 380);
+      }
+      subNode.textContent = sub;
     };
 
     const updateMetrics = () => {
       const now = new Date();
-      const seconds = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
-      const pulse = Math.floor(wave(seconds, dailyBase.requests / 1000, 3.2) * 36);
-      const requests = Math.max(0, Math.round(dailyBase.requests + seconds * dailyBase.requestRate + pulse));
-      const spend = dailyBase.spend + seconds * dailyBase.requestRate * 0.00042 + wave(seconds, 3.4, 4.1) * 1.8;
-      const balance = Math.max(0, dailyBase.balance - spend * 0.18 + wave(seconds, 7.8, 5.6) * 2.6);
-      const success = Math.min(99.99, Math.max(99.42, dailyBase.success + wave(seconds, 1.2, 5.2) * 0.035));
+      const secondsToday = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
+      const liveSeconds = Math.max(0, (Date.now() - pageStartedAt) / 1000);
+      const liveTicks = Math.floor(liveSeconds);
+      const requests = Math.round(dailyBase.requestStart + secondsToday * dailyBase.requestRate + liveTicks);
+      const spend = dailyBase.spendStart + secondsToday * dailyBase.spendRate + liveTicks * dailyBase.liveSpendRate;
+      const balance = Math.max(0, dailyBase.balanceStart - spend);
+      const successTick = Math.floor(secondsToday / 8);
+      const success = Math.min(99.99, Math.max(99.42, dailyBase.success + wave(successTick, 1.2, 7.5) * 0.006));
 
-      setMetric("requests", formatInt.format(requests), `较昨日 +${(dailyBase.requestDelta + wave(seconds, 2.1, 9) * 0.35).toFixed(1)}%`);
-      setMetric("spend", formatMoney.format(spend), `较昨日 +${(dailyBase.spendDelta + wave(seconds, 4.3, 10) * 0.28).toFixed(1)}%`);
+      setMetric("requests", formatInt.format(requests), `较昨日 +${(dailyBase.requestDelta + Math.min(1.8, liveSeconds * 0.012)).toFixed(1)}%`);
+      setMetric("spend", formatMoney.format(spend), `较昨日 +${(dailyBase.spendDelta + Math.min(1.4, liveSeconds * 0.009)).toFixed(1)}%`);
       setMetric("balance", formatMoney.format(balance), "可用额度");
       setMetric("success", `${success.toFixed(2)}%`, "近 24 小时");
     };

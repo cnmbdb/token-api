@@ -21,18 +21,6 @@
       --secondary-foreground: #f4f4f5;
       --accent: rgba(63, 63, 70, 0.82);
       --accent-foreground: #fafafa;
-      --nav-bg: rgba(8, 37, 69, 0.86);
-      --nav-surface: rgba(6, 0, 16, 0.86);
-      --nav-border: rgba(255, 255, 255, 0.14);
-      --nav-border-soft: rgba(255, 255, 255, 0.08);
-      --nav-text: rgba(255, 255, 255, 0.76);
-      --nav-text-active: #060010;
-      --nav-button: #ffffff;
-      --nav-button-foreground: #060010;
-      --gooey-color-1: #ffffff;
-      --gooey-color-2: #8cef47;
-      --gooey-color-3: #60a5fa;
-      --gooey-color-4: #f472b6;
       --green: #8cef47;
       --blue: #60a5fa;
       --pink: #f472b6;
@@ -95,29 +83,15 @@
       display: grid;
       grid-template-columns: minmax(0, 1fr) auto;
       align-items: center;
-      gap: 14px;
+      gap: 18px;
       margin-bottom: clamp(22px, 4vw, 44px);
-      padding: 8px;
-      border: 1px solid var(--nav-border);
+      padding: 12px;
+      border: 0;
       border-radius: 999px;
-      background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent 42%),
-        var(--nav-surface);
-      box-shadow:
-        0 0 0 1px var(--nav-border-soft),
-        0 18px 42px rgba(0, 0, 0, 0.34),
-        inset 0 1px 0 rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(18px) saturate(1.16);
-      -webkit-backdrop-filter: blur(18px) saturate(1.16);
-    }
-
-    .topbar::before {
-      content: "";
-      position: absolute;
-      pointer-events: none;
-      inset: 3px;
-      border: 1px solid rgba(255, 255, 255, 0.045);
-      border-radius: inherit;
+      background: rgba(9, 9, 11, 0.78);
+      box-shadow: var(--shadow-sm), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(18px) saturate(1.18);
+      -webkit-backdrop-filter: blur(18px) saturate(1.18);
     }
 
     .brand {
@@ -135,16 +109,12 @@
     .nav {
       display: flex;
       justify-content: flex-start;
-      gap: 0.35rem;
+      gap: 8px;
       min-width: 0;
-      position: relative;
-      isolation: isolate;
-      padding: 0;
-      color: var(--nav-text);
-      text-shadow: 0 1px 1px rgba(0, 0, 0, 0.35);
     }
 
-    .nav a {
+    .nav a,
+    .login {
       min-height: 42px;
       display: inline-flex;
       align-items: center;
@@ -155,168 +125,27 @@
       font-weight: 850;
       white-space: nowrap;
       transform-origin: center;
-      transition: color 0.24s ease, text-shadow 0.24s ease;
-      will-change: transform;
-      position: relative;
-      z-index: 3;
-    }
-
-    .nav a.is-active {
-      color: var(--nav-text-active);
-      text-shadow: none;
-    }
-
-    .nav a.is-ghosted {
-      color: transparent;
-      text-shadow: none;
+      will-change: transform, background-color;
     }
 
     .nav a:hover {
-      color: #ffffff;
+      color: var(--ink);
+      background: var(--accent);
     }
 
-    .nav a.is-active:hover {
-      color: var(--nav-text-active);
-    }
-
-    .gooey-effect,
-    .gooey-text {
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 0;
-      height: 0;
-      pointer-events: none;
-      display: grid;
-      place-items: center;
-      border-radius: 999px;
-    }
-
-    .gooey-effect {
-      z-index: 1;
-      filter: blur(7px) contrast(100);
-      mix-blend-mode: lighten;
-    }
-
-    .gooey-effect::before {
-      content: "";
-      position: absolute;
-      inset: -70px;
-      z-index: -2;
-      background: #000000;
-    }
-
-    .gooey-effect::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      border-radius: 999px;
-      background: #ffffff;
-      transform: scale(1);
-      opacity: 1;
-    }
-
-    .gooey-text {
-      z-index: 2;
-      color: var(--nav-text-active);
-      font-size: 14px;
-      font-weight: 850;
-      white-space: nowrap;
-    }
-
-    .gooey-text.is-animating {
-      animation: gooeyTextPop 0.34s ease both;
-    }
-
-    .gooey-particle,
-    .gooey-point {
-      display: block;
-      opacity: 0;
-      width: 18px;
-      height: 18px;
-      border-radius: 999px;
-      transform-origin: center;
-    }
-
-    .gooey-particle {
-      position: absolute;
-      top: calc(50% - 9px);
-      left: calc(50% - 9px);
-      animation: gooeyParticle var(--time, 900ms) ease 1 -180ms;
-    }
-
-    .gooey-point {
-      background: var(--color, #ffffff);
-      opacity: 1;
-      animation: gooeyPoint var(--time, 900ms) ease 1 -180ms;
-    }
-
-    @keyframes gooeyTextPop {
-      0% { transform: scale(0.94); opacity: 0.7; }
-      100% { transform: scale(1); opacity: 1; }
-    }
-
-    @keyframes gooeyParticle {
-      0% {
-        transform: rotate(0deg) translate(var(--start-x), var(--start-y));
-        opacity: 1;
-        animation-timing-function: cubic-bezier(0.55, 0, 1, 0.45);
-      }
-
-      70% {
-        transform: rotate(calc(var(--rotate) * 0.5)) translate(calc(var(--end-x) * 1.2), calc(var(--end-y) * 1.2));
-        opacity: 1;
-      }
-
-      100% {
-        transform: rotate(calc(var(--rotate) * 1.2)) translate(calc(var(--end-x) * 0.5), calc(var(--end-y) * 0.5));
-        opacity: 1;
-      }
-    }
-
-    @keyframes gooeyPoint {
-      0% {
-        transform: scale(0);
-        opacity: 0;
-      }
-
-      38% {
-        opacity: 1;
-      }
-
-      65% {
-        transform: scale(var(--scale, 1));
-        opacity: 1;
-      }
-
-      100% {
-        transform: scale(0);
-        opacity: 0;
-      }
+    .nav a {
+      color: var(--muted);
     }
 
     .login {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 999px;
-      font-size: 14px;
-      font-weight: 850;
-      white-space: nowrap;
-      transform-origin: center;
-      will-change: transform, background-color;
-      min-height: 46px;
-      padding: 0 24px;
-      color: var(--nav-button-foreground);
-      background: var(--nav-button);
-      box-shadow:
-        0 10px 24px rgba(0, 0, 0, 0.22),
-        inset 0 1px 0 rgba(255, 255, 255, 0.62);
+      color: var(--primary-foreground);
+      background: var(--primary);
+      box-shadow: var(--shadow-sm);
     }
 
     .login:hover,
     .button.primary:hover {
-      background: #eef6ff;
+      background: #e4e4e7;
     }
 
     .button:focus-visible,
@@ -934,7 +763,6 @@
     @media (max-width: 1040px) {
       .topbar {
         grid-template-columns: 1fr auto;
-        padding-left: 16px;
         border-radius: 30px;
       }
 
@@ -942,13 +770,7 @@
         grid-column: 1 / -1;
         justify-content: flex-start;
         overflow-x: auto;
-        gap: 10px;
-        padding: 4px 2px;
-        scrollbar-width: none;
-      }
-
-      .nav::-webkit-scrollbar {
-        display: none;
+        padding: 4px;
       }
 
       .hero-board {
@@ -974,8 +796,7 @@
         position: relative;
         top: auto;
         gap: 10px;
-        padding: 8px;
-        border-radius: calc(var(--radius) + 8px);
+        border-radius: var(--radius);
       }
 
       .brand {
@@ -989,17 +810,13 @@
 
       .login {
         min-height: 40px;
-        padding: 0 16px;
+        padding: 0 14px;
         font-size: 13px;
       }
 
       .nav a {
         min-height: 36px;
-        padding: 0 14px;
-        font-size: 12px;
-      }
-
-      .gooey-text {
+        padding: 0 12px;
         font-size: 12px;
       }
 
@@ -1082,13 +899,11 @@
   <main class="shell">
     <header class="topbar">
       <a class="brand" href="#top" aria-label="DujiAPI"></a>
-      <nav class="nav gooey-nav" aria-label="主导航" data-active-index="0">
-        <a class="is-active" href="#top">首页</a>
+      <nav class="nav" aria-label="主导航">
+        <a href="#top">首页</a>
         <a href="https://token.macosabc.com/dashboard/overview">控制台</a>
         <a href="https://token.macosabc.com/pricing">模型广场</a>
         <a href="https://token.macosabc.com/rankings">文档</a>
-        <span class="gooey-effect" aria-hidden="true"></span>
-        <span class="gooey-text" aria-hidden="true">首页</span>
       </nav>
       <a class="login" href="https://token.macosabc.com/sign-in">免费试用 ↗</a>
     </header>
@@ -1264,141 +1079,6 @@ var module=undefined,exports=undefined,define=undefined;
       var prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       gsap.defaults({ ease: "power3.out" });
       if (window.ScrollTrigger) gsap.registerPlugin(ScrollTrigger);
-
-      function initGooeyNav() {
-        var nav = document.querySelector(".gooey-nav");
-        if (!nav) return;
-
-        var links = Array.prototype.slice.call(nav.querySelectorAll("a"));
-        var effect = nav.querySelector(".gooey-effect");
-        var text = nav.querySelector(".gooey-text");
-        var active = nav.querySelector("a.is-active") || links[0];
-        var previewTarget = active;
-        var colors = [
-          "var(--gooey-color-1)",
-          "var(--gooey-color-2)",
-          "var(--gooey-color-3)",
-          "var(--gooey-color-4)"
-        ];
-
-        function sync(target, animate) {
-          if (!target || !effect || !text) return;
-          var navRect = nav.getBoundingClientRect();
-          var targetRect = target.getBoundingClientRect();
-          var left = targetRect.left - navRect.left + nav.scrollLeft;
-          var top = targetRect.top - navRect.top;
-
-          gsap.to([effect, text], {
-            x: left,
-            y: top,
-            width: targetRect.width,
-            height: targetRect.height,
-            duration: animate ? 0.42 : 0,
-            ease: "elastic.out(1, 0.72)",
-            overwrite: true
-          });
-
-          text.textContent = target.textContent.trim();
-          text.classList.toggle("is-animating", !!animate);
-          if (animate) {
-            window.setTimeout(function () {
-              text.classList.remove("is-animating");
-            }, 360);
-          }
-        }
-
-        function makeParticles() {
-          if (!effect || prefersReduced) return;
-          effect.querySelectorAll(".gooey-particle").forEach(function (particle) {
-            particle.remove();
-          });
-
-          for (var i = 0; i < 14; i += 1) {
-            var angle = (Math.PI * 2 * i) / 14 + (Math.random() - 0.5) * 0.5;
-            var start = 34 + Math.random() * 46;
-            var end = 8 + Math.random() * 10;
-            var particle = document.createElement("span");
-            var point = document.createElement("span");
-
-            particle.className = "gooey-particle";
-            point.className = "gooey-point";
-            particle.style.setProperty("--start-x", Math.cos(angle) * start + "px");
-            particle.style.setProperty("--start-y", Math.sin(angle) * start + "px");
-            particle.style.setProperty("--end-x", Math.cos(angle) * end + "px");
-            particle.style.setProperty("--end-y", Math.sin(angle) * end + "px");
-            particle.style.setProperty("--rotate", (Math.random() * 120 - 60) + "deg");
-            particle.style.setProperty("--scale", String(0.72 + Math.random() * 0.7));
-            particle.style.setProperty("--time", (980 + Math.random() * 360) + "ms");
-            particle.style.setProperty("--color", colors[i % colors.length]);
-            particle.appendChild(point);
-            effect.appendChild(particle);
-
-            window.setTimeout(function (node) {
-              node.remove();
-            }, 1500, particle);
-          }
-        }
-
-        function activate(target, animate, persist) {
-          if (!target) return;
-          var changed = target !== previewTarget;
-          if (animate && !persist && !changed) return;
-          links.forEach(function (link) {
-            var isCurrent = link === target;
-            link.classList.toggle("is-active", isCurrent);
-            link.classList.toggle("is-ghosted", isCurrent);
-          });
-          if (persist) active = target;
-          previewTarget = target;
-          sync(target, animate);
-          if (animate) makeParticles();
-        }
-
-        links.forEach(function (link) {
-          function preview() {
-            activate(link, true, false);
-          }
-
-          link.addEventListener("pointerenter", preview);
-          link.addEventListener("mouseenter", preview);
-          link.addEventListener("mouseover", preview);
-          link.addEventListener("focus", function () {
-            activate(link, true, false);
-          });
-          link.addEventListener("click", function () {
-            activate(link, true, true);
-          });
-        });
-
-        nav.addEventListener("mousemove", function (event) {
-          var link = event.target.closest && event.target.closest("a");
-          if (link && nav.contains(link)) {
-            activate(link, true, false);
-          }
-        });
-
-        nav.addEventListener("pointerleave", function () {
-          activate(active, false, true);
-        });
-
-        nav.addEventListener("mouseleave", function () {
-          activate(active, false, true);
-        });
-
-        nav.addEventListener("scroll", function () {
-          sync(active, false);
-        }, { passive: true });
-
-        window.addEventListener("resize", function () {
-          sync(active, false);
-        });
-
-        window.requestAnimationFrame(function () {
-          activate(active, false, true);
-        });
-      }
-
-      initGooeyNav();
 
       if (!prefersReduced) {
         var intro = gsap.timeline({ defaults: { duration: 0.48 } });

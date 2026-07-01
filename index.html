@@ -21,6 +21,13 @@
       --secondary-foreground: #f4f4f5;
       --accent: rgba(63, 63, 70, 0.82);
       --accent-foreground: #fafafa;
+      --nav-bg: rgba(8, 37, 69, 0.86);
+      --nav-border: #1488ff;
+      --nav-border-soft: rgba(20, 136, 255, 0.34);
+      --nav-text: rgba(205, 224, 255, 0.68);
+      --nav-text-active: #eff7ff;
+      --nav-button: #d8eaff;
+      --nav-button-foreground: #06192d;
       --green: #8cef47;
       --blue: #60a5fa;
       --pink: #f472b6;
@@ -85,13 +92,47 @@
       align-items: center;
       gap: 18px;
       margin-bottom: clamp(22px, 4vw, 44px);
-      padding: 12px;
-      border: 0;
+      padding: 10px 12px 10px 22px;
+      border: 2px solid var(--nav-border);
       border-radius: 999px;
-      background: rgba(9, 9, 11, 0.78);
-      box-shadow: var(--shadow-sm), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      background:
+        linear-gradient(180deg, rgba(18, 66, 114, 0.9), var(--nav-bg)),
+        var(--nav-bg);
+      box-shadow:
+        0 0 0 1px var(--nav-border-soft),
+        0 0 32px rgba(20, 136, 255, 0.22),
+        inset 0 1px 0 rgba(255, 255, 255, 0.16),
+        inset 0 -18px 38px rgba(0, 0, 0, 0.16);
       backdrop-filter: blur(18px) saturate(1.18);
       -webkit-backdrop-filter: blur(18px) saturate(1.18);
+    }
+
+    .topbar::before,
+    .topbar::after {
+      content: "";
+      position: absolute;
+      pointer-events: none;
+    }
+
+    .topbar::before {
+      inset: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: inherit;
+    }
+
+    .topbar::after {
+      top: -10px;
+      left: min(80%, calc(100% - 210px));
+      width: 24px;
+      aspect-ratio: 1;
+      border: 2px solid #f7fbff;
+      border-radius: 999px;
+      background:
+        radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.82), transparent 18%),
+        var(--nav-border);
+      box-shadow:
+        0 0 0 2px rgba(20, 136, 255, 0.36),
+        0 8px 22px rgba(20, 136, 255, 0.42);
     }
 
     .brand {
@@ -109,7 +150,7 @@
     .nav {
       display: flex;
       justify-content: flex-start;
-      gap: 8px;
+      gap: clamp(14px, 3vw, 44px);
       min-width: 0;
     }
 
@@ -120,7 +161,7 @@
       align-items: center;
       justify-content: center;
       border-radius: 999px;
-      padding: 0 18px;
+      padding: 0 12px;
       font-size: 14px;
       font-weight: 850;
       white-space: nowrap;
@@ -129,23 +170,27 @@
     }
 
     .nav a:hover {
-      color: var(--ink);
-      background: var(--accent);
+      color: var(--nav-text-active);
+      background: rgba(216, 234, 255, 0.09);
     }
 
     .nav a {
-      color: var(--muted);
+      color: var(--nav-text);
     }
 
     .login {
-      color: var(--primary-foreground);
-      background: var(--primary);
-      box-shadow: var(--shadow-sm);
+      min-height: 46px;
+      padding: 0 24px;
+      color: var(--nav-button-foreground);
+      background: var(--nav-button);
+      box-shadow:
+        0 10px 24px rgba(0, 0, 0, 0.22),
+        inset 0 1px 0 rgba(255, 255, 255, 0.62);
     }
 
     .login:hover,
     .button.primary:hover {
-      background: #e4e4e7;
+      background: #eef6ff;
     }
 
     .button:focus-visible,
@@ -763,6 +808,7 @@
     @media (max-width: 1040px) {
       .topbar {
         grid-template-columns: 1fr auto;
+        padding-left: 16px;
         border-radius: 30px;
       }
 
@@ -770,7 +816,13 @@
         grid-column: 1 / -1;
         justify-content: flex-start;
         overflow-x: auto;
-        padding: 4px;
+        gap: 10px;
+        padding: 4px 2px;
+        scrollbar-width: none;
+      }
+
+      .nav::-webkit-scrollbar {
+        display: none;
       }
 
       .hero-board {
@@ -796,7 +848,16 @@
         position: relative;
         top: auto;
         gap: 10px;
-        border-radius: var(--radius);
+        padding: 8px;
+        border-width: 1.5px;
+        border-radius: calc(var(--radius) + 8px);
+      }
+
+      .topbar::after {
+        top: -8px;
+        left: auto;
+        right: 58px;
+        width: 18px;
       }
 
       .brand {
@@ -810,13 +871,13 @@
 
       .login {
         min-height: 40px;
-        padding: 0 14px;
+        padding: 0 16px;
         font-size: 13px;
       }
 
       .nav a {
         min-height: 36px;
-        padding: 0 12px;
+        padding: 0 14px;
         font-size: 12px;
       }
 

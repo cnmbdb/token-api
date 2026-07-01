@@ -8,16 +8,26 @@
   <meta name="description" content="DujiAPI 聚合 OpenAI、Claude、Gemini、DeepSeek 等主流 AI 模型，提供统一 API、智能路由、用量监控与灵活订阅。">
   <style>
     :root {
-      --bg: #f3f6f1;
-      --ink: #101412;
-      --muted: rgba(16, 20, 18, 0.62);
-      --line: rgba(16, 20, 18, 0.12);
-      --panel: rgba(255, 255, 255, 0.68);
+      --bg: #09090b;
+      --ink: #fafafa;
+      --muted: #a1a1aa;
+      --line: rgba(255, 255, 255, 0.11);
+      --panel: rgba(24, 24, 27, 0.72);
+      --card: rgba(9, 9, 11, 0.82);
+      --card-hover: rgba(24, 24, 27, 0.9);
+      --primary: #fafafa;
+      --primary-foreground: #09090b;
+      --secondary: rgba(39, 39, 42, 0.9);
+      --secondary-foreground: #f4f4f5;
+      --accent: rgba(63, 63, 70, 0.82);
+      --accent-foreground: #fafafa;
       --green: #8cef47;
-      --blue: #1f65ff;
-      --pink: #ff5f8f;
-      --amber: #ffbd4a;
-      --shadow: 0 24px 70px rgba(18, 24, 22, 0.14);
+      --blue: #60a5fa;
+      --pink: #f472b6;
+      --amber: #fbbf24;
+      --radius: 18px;
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.36);
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.32);
       font-family: Barlow, "PingFang SC", "Microsoft YaHei", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
@@ -41,7 +51,7 @@
       overflow-x: hidden;
       overscroll-behavior-x: none;
       color: var(--ink);
-      background: #000;
+      background: var(--bg);
     }
 
     body::before {
@@ -51,8 +61,12 @@
       pointer-events: none;
       z-index: -1;
       background:
-        linear-gradient(120deg, transparent 0 16%, rgba(140, 239, 71, 0.07) 16% 28%, transparent 28% 50%, rgba(31, 101, 255, 0.06) 50% 62%, transparent 62%),
-        repeating-linear-gradient(115deg, rgba(255, 255, 255, 0.035) 0 1px, transparent 1px 18px);
+        radial-gradient(circle at 50% 0%, rgba(140, 239, 71, 0.13), transparent 28%),
+        radial-gradient(circle at 90% 22%, rgba(96, 165, 250, 0.1), transparent 24%),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+        #09090b;
+      background-size: auto, auto, 72px 72px, 72px 72px, auto;
     }
 
     a {
@@ -73,21 +87,21 @@
       top: 14px;
       z-index: 30;
       display: grid;
-      grid-template-columns: auto minmax(0, 1fr) auto;
+      grid-template-columns: minmax(0, 1fr) auto;
       align-items: center;
       gap: 18px;
       margin-bottom: clamp(22px, 4vw, 44px);
       padding: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.72);
+      border: 1px solid var(--line);
       border-radius: 999px;
-      background: rgba(255, 255, 255, 0.54);
-      box-shadow: 0 18px 44px rgba(16, 20, 18, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.75);
-      backdrop-filter: blur(18px) saturate(1.12);
-      -webkit-backdrop-filter: blur(18px) saturate(1.12);
+      background: rgba(9, 9, 11, 0.78);
+      box-shadow: var(--shadow-sm), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(18px) saturate(1.18);
+      -webkit-backdrop-filter: blur(18px) saturate(1.18);
     }
 
     .brand {
-      display: inline-flex;
+      display: none;
       align-items: center;
       gap: 0;
       min-width: 24px;
@@ -100,7 +114,7 @@
 
     .nav {
       display: flex;
-      justify-content: center;
+      justify-content: flex-start;
       gap: 8px;
       min-width: 0;
     }
@@ -120,31 +134,48 @@
       will-change: transform, background-color;
     }
 
+    .nav a:hover {
+      color: var(--ink);
+      background: var(--accent);
+    }
+
     .nav a {
-      color: rgba(16, 20, 18, 0.78);
+      color: var(--muted);
     }
 
     .login {
-      color: #fff;
-      background: #101412;
-      box-shadow: 0 10px 22px rgba(16, 20, 18, 0.18);
+      color: var(--primary-foreground);
+      background: var(--primary);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .login:hover,
+    .button.primary:hover {
+      background: #e4e4e7;
+    }
+
+    .button:focus-visible,
+    .nav a:focus-visible,
+    .login:focus-visible {
+      outline: 2px solid rgba(140, 239, 71, 0.8);
+      outline-offset: 2px;
     }
 
     .hero {
       position: relative;
-      min-height: min(720px, calc(100vh - 120px));
+      min-height: min(620px, calc(100dvh - 128px));
       display: grid;
       place-items: center;
       overflow: hidden;
       padding: clamp(26px, 3.4vw, 48px) clamp(20px, 5vw, 72px) clamp(18px, 2.4vw, 32px);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: clamp(24px, 3.4vw, 42px);
+      border: 1px solid var(--line);
+      border-radius: calc(var(--radius) + 14px);
       background:
-        radial-gradient(circle at 50% 82%, rgba(255, 255, 255, 0.16), transparent 28%),
-        radial-gradient(circle at 50% 56%, rgba(140, 239, 71, 0.1), transparent 25%),
-        linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.012)),
-        #030403;
-      box-shadow: 0 28px 90px rgba(0, 0, 0, 0.58), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        radial-gradient(circle at 50% 82%, rgba(255, 255, 255, 0.075), transparent 28%),
+        radial-gradient(circle at 50% 54%, rgba(140, 239, 71, 0.08), transparent 25%),
+        linear-gradient(180deg, rgba(39, 39, 42, 0.5), rgba(9, 9, 11, 0.92)),
+        var(--bg);
+      box-shadow: var(--shadow), inset 0 1px 0 rgba(255, 255, 255, 0.08);
       isolation: isolate;
     }
 
@@ -158,9 +189,9 @@
 
     .hero::before {
       inset: 0 clamp(18px, 5vw, 78px);
-      border-inline: 1px solid rgba(255, 255, 255, 0.08);
+      border-inline: 1px solid rgba(255, 255, 255, 0.06);
       background:
-        linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px),
         linear-gradient(180deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
       background-size: 72px 72px;
       mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.92), transparent 88%);
@@ -199,13 +230,13 @@
       gap: 8px;
       margin-bottom: 18px;
       padding: 9px 15px;
-      border: 1px solid rgba(255, 255, 255, 0.11);
+      border: 1px solid var(--line);
       border-radius: 999px;
-      color: rgba(255, 255, 255, 0.72);
-      background: rgba(255, 255, 255, 0.07);
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(18px) saturate(1.2);
-      -webkit-backdrop-filter: blur(18px) saturate(1.2);
+      color: var(--muted);
+      background: rgba(24, 24, 27, 0.72);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07);
+      backdrop-filter: blur(14px) saturate(1.12);
+      -webkit-backdrop-filter: blur(14px) saturate(1.12);
       font-size: 13px;
       font-weight: 850;
     }
@@ -216,7 +247,7 @@
       width: 22px;
       aspect-ratio: 1;
       border-radius: 50%;
-      color: #101412;
+      color: var(--primary-foreground);
       background: var(--green);
       font-size: 12px;
     }
@@ -224,7 +255,7 @@
     h1 {
       max-width: 780px;
       margin: 0;
-      color: #f7f7f2;
+      color: var(--ink);
       font-size: clamp(44px, 5.1vw, 82px);
       line-height: 0.98;
       letter-spacing: -0.06em;
@@ -236,14 +267,14 @@
     }
 
     .accent-word {
-      color: rgba(255, 255, 255, 0.62);
+      color: rgba(250, 250, 250, 0.62);
       text-shadow: none;
     }
 
     .lead {
       width: min(500px, 100%);
       margin: 16px 0 0;
-      color: rgba(255, 255, 255, 0.58);
+      color: var(--muted);
       font-size: clamp(14px, 1.12vw, 17px);
       line-height: 1.55;
       font-weight: 650;
@@ -264,26 +295,36 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      border: 1px solid rgba(255, 255, 255, 0.16);
+      border: 1px solid var(--line);
       border-radius: 999px;
       padding: 0 24px;
       font-weight: 950;
       white-space: nowrap;
-      box-shadow: 0 14px 26px rgba(16, 20, 18, 0.12);
+      box-shadow: 0 14px 26px rgba(0, 0, 0, 0.24);
       transform-origin: center;
       will-change: transform;
     }
 
     .button.primary {
-      color: #101412;
-      background: #fff;
+      color: var(--primary-foreground);
+      background: var(--primary);
     }
 
     .button.secondary {
-      color: rgba(255, 255, 255, 0.82);
-      background: rgba(255, 255, 255, 0.055);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+      color: var(--secondary-foreground);
+      background: var(--secondary);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .button.secondary:hover {
+      background: var(--accent);
+    }
+
+    .button:active,
+    .nav a:active,
+    .login:active {
+      transform: translateY(1px) scale(0.99);
     }
 
     .button::after {
@@ -299,7 +340,7 @@
 
     .hero-board {
       width: min(620px, 100%);
-      min-height: 270px;
+      min-height: 230px;
       margin-top: clamp(12px, 2vw, 22px);
       display: grid;
       place-items: center;
@@ -309,7 +350,7 @@
     .model-cloud {
       position: relative;
       width: min(100%, 430px);
-      height: clamp(270px, 29vw, 340px);
+      height: clamp(230px, 24vw, 300px);
       transform-style: preserve-3d;
     }
 
@@ -374,7 +415,7 @@
       display: grid;
       place-items: center;
       border: 1px solid rgba(255, 255, 255, 0.16);
-      border-radius: 30px;
+      border-radius: calc(var(--radius) + 8px);
       color: rgba(255, 255, 255, 0.72);
       background:
         radial-gradient(circle at 28% 18%, rgba(255, 255, 255, 0.16), transparent 36%),
@@ -435,13 +476,13 @@
       align-items: center;
       gap: 18px;
       padding: 22px;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
       color: rgba(255, 255, 255, 0.82);
       background:
-        radial-gradient(circle at 25% 12%, rgba(255, 105, 180, 0.2), transparent 42%),
-        linear-gradient(110deg, rgba(68, 30, 73, 0.66), rgba(36, 24, 50, 0.74) 48%, rgba(111, 64, 30, 0.42)),
-        rgba(13, 10, 24, 0.82);
+        radial-gradient(circle at 18% 0%, rgba(140, 239, 71, 0.12), transparent 36%),
+        linear-gradient(135deg, rgba(39, 39, 42, 0.86), rgba(9, 9, 11, 0.92)),
+        var(--card);
       box-shadow:
         0 18px 54px rgba(0, 0, 0, 0.36),
         inset 0 1px 0 rgba(255, 255, 255, 0.12);
@@ -451,24 +492,24 @@
 
     .metric:nth-child(2) {
       background:
-        radial-gradient(circle at 50% 0%, rgba(180, 118, 255, 0.2), transparent 44%),
-        linear-gradient(110deg, rgba(86, 34, 45, 0.66), rgba(33, 25, 52, 0.78) 55%, rgba(82, 51, 42, 0.42)),
-        rgba(13, 10, 24, 0.82);
+        radial-gradient(circle at 18% 0%, rgba(96, 165, 250, 0.13), transparent 36%),
+        linear-gradient(135deg, rgba(39, 39, 42, 0.86), rgba(9, 9, 11, 0.92)),
+        var(--card);
     }
 
     .metric:nth-child(3) {
       background:
-        radial-gradient(circle at 20% 10%, rgba(188, 82, 255, 0.28), transparent 40%),
-        linear-gradient(110deg, rgba(70, 28, 86, 0.76), rgba(72, 38, 65, 0.7) 48%, rgba(128, 78, 30, 0.46)),
-        rgba(13, 10, 24, 0.82);
+        radial-gradient(circle at 18% 0%, rgba(244, 114, 182, 0.13), transparent 36%),
+        linear-gradient(135deg, rgba(39, 39, 42, 0.86), rgba(9, 9, 11, 0.92)),
+        var(--card);
     }
 
     .metric::before {
       content: "";
       position: absolute;
       inset: 0;
-      background: linear-gradient(90deg, rgba(255, 255, 255, 0.1), transparent 28%, rgba(255, 255, 255, 0.06));
-      opacity: 0.65;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), transparent 42%);
+      opacity: 0.82;
       pointer-events: none;
     }
 
@@ -485,9 +526,8 @@
       border-radius: 15px;
       color: rgba(255, 255, 255, 0.92);
       background:
-        radial-gradient(circle at 72% 28%, rgba(255, 95, 143, 0.75), transparent 16%),
-        radial-gradient(circle at 30% 72%, rgba(255, 189, 74, 0.68), transparent 18%),
-        linear-gradient(145deg, rgba(25, 54, 90, 0.92), rgba(5, 21, 38, 0.98));
+        radial-gradient(circle at 72% 28%, rgba(140, 239, 71, 0.38), transparent 18%),
+        linear-gradient(145deg, rgba(39, 39, 42, 0.94), rgba(9, 9, 11, 0.98));
       box-shadow:
         0 12px 28px rgba(0, 0, 0, 0.28),
         inset 0 1px 0 rgba(255, 255, 255, 0.18);
@@ -523,10 +563,10 @@
     .section {
       margin-top: clamp(18px, 3vw, 34px);
       padding: clamp(28px, 5vw, 68px);
-      border-radius: clamp(26px, 3.2vw, 44px);
-      background: rgba(255, 255, 255, 0.52);
-      border: 1px solid rgba(255, 255, 255, 0.68);
-      box-shadow: 0 20px 58px rgba(16, 20, 18, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.75);
+      border-radius: calc(var(--radius) + 12px);
+      background: rgba(9, 9, 11, 0.72);
+      border: 1px solid var(--line);
+      box-shadow: 0 20px 58px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.06);
       backdrop-filter: blur(16px) saturate(1.08);
       -webkit-backdrop-filter: blur(16px) saturate(1.08);
     }
@@ -568,10 +608,10 @@
       overflow: hidden;
       min-height: 260px;
       padding: 22px;
-      border: 1px solid rgba(16, 20, 18, 0.1);
-      border-radius: 24px;
-      background: rgba(255, 255, 255, 0.58);
-      box-shadow: 0 18px 36px rgba(16, 20, 18, 0.08);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--card);
+      box-shadow: var(--shadow-sm);
       transform-origin: center;
       will-change: transform;
     }
@@ -581,9 +621,16 @@
       content: "";
       position: absolute;
       inset: 0;
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.74), transparent 45%);
-      opacity: 0.75;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.07), transparent 45%);
+      opacity: 1;
       pointer-events: none;
+    }
+
+    .feature-card:hover,
+    .price-card:hover,
+    .model-chip:hover {
+      border-color: rgba(255, 255, 255, 0.18);
+      background: var(--card-hover);
     }
 
     .feature-card > *,
@@ -599,7 +646,7 @@
       place-items: center;
       margin-bottom: 42px;
       border-radius: 18px;
-      color: #101412;
+      color: var(--primary-foreground);
       background: var(--green);
       font-size: 24px;
       font-weight: 950;
@@ -634,8 +681,9 @@
       min-height: 30px;
       padding: 0 11px;
       border-radius: 999px;
-      color: rgba(16, 20, 18, 0.72);
-      background: rgba(16, 20, 18, 0.06);
+      color: var(--muted);
+      background: rgba(39, 39, 42, 0.92);
+      border: 1px solid rgba(255, 255, 255, 0.07);
       font-size: 12px;
       font-weight: 850;
     }
@@ -661,10 +709,10 @@
       align-content: center;
       gap: 8px;
       padding: 16px;
-      border: 1px solid rgba(16, 20, 18, 0.1);
-      border-radius: 22px;
-      background: rgba(255, 255, 255, 0.6);
-      box-shadow: 0 14px 28px rgba(16, 20, 18, 0.07);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--card);
+      box-shadow: var(--shadow-sm);
       font-weight: 950;
     }
 
@@ -685,10 +733,12 @@
     }
 
     .price-card.featured {
-      color: #fff;
+      color: var(--ink);
       background:
-        linear-gradient(135deg, rgba(255, 255, 255, 0.14), transparent 38%),
-        #101412;
+        radial-gradient(circle at 18% 0%, rgba(140, 239, 71, 0.16), transparent 34%),
+        linear-gradient(135deg, rgba(255, 255, 255, 0.08), transparent 38%),
+        #09090b;
+      border-color: rgba(140, 239, 71, 0.34);
     }
 
     .price-card.featured p,
@@ -727,26 +777,10 @@
       justify-content: space-between;
       gap: 18px;
       padding: 34px clamp(4px, 1vw, 12px) 8px;
-      color: rgba(16, 20, 18, 0.56);
+      color: var(--muted);
       font-size: 13px;
       font-weight: 700;
       flex-wrap: wrap;
-    }
-
-    .cursor-dot {
-      position: fixed;
-      z-index: 80;
-      left: 0;
-      top: 0;
-      width: 24px;
-      aspect-ratio: 1;
-      margin: -12px 0 0 -12px;
-      border: 2px solid rgba(16, 20, 18, 0.22);
-      border-radius: 50%;
-      box-shadow: 0 0 0 16px rgba(141, 242, 72, 0.14);
-      pointer-events: none;
-      opacity: 0;
-      will-change: transform, opacity;
     }
 
     @media (max-width: 1040px) {
@@ -763,7 +797,7 @@
       }
 
       .hero-board {
-        min-height: 330px;
+        min-height: 280px;
       }
 
       .feature-grid,
@@ -785,7 +819,7 @@
         position: relative;
         top: auto;
         gap: 10px;
-        border-radius: 26px;
+        border-radius: var(--radius);
       }
 
       .brand {
@@ -811,7 +845,7 @@
 
       .hero,
       .section {
-        border-radius: 28px;
+        border-radius: calc(var(--radius) + 6px);
         padding: 22px;
       }
 
@@ -832,11 +866,11 @@
       }
 
       .hero-board {
-        min-height: 300px;
+        min-height: 280px;
       }
 
       .model-cloud {
-        height: 300px;
+        height: 280px;
       }
 
       .model-card {
@@ -1029,7 +1063,6 @@
       <span>Copyright © 2026 DujiAPI. 保留所有权利。</span>
       <span>Unified API · Smart Routing · Token Analytics</span>
     </footer>
-    <div class="cursor-dot" aria-hidden="true"></div>
   </main>
 
   <script>
@@ -1139,25 +1172,6 @@ var module=undefined,exports=undefined,define=undefined;
           });
         });
       }
-
-      var cursor = document.querySelector(".cursor-dot");
-      var xTo = gsap.quickTo(cursor, "x", { duration: 0.22, ease: "power3" });
-      var yTo = gsap.quickTo(cursor, "y", { duration: 0.22, ease: "power3" });
-
-      document.addEventListener("mousemove", function (event) {
-        xTo(event.clientX);
-        yTo(event.clientY);
-      });
-
-      document.querySelectorAll(".hero, .section, .metric").forEach(function (area) {
-        area.addEventListener("mouseenter", function (event) {
-          gsap.set(cursor, { x: event.clientX, y: event.clientY });
-          gsap.to(cursor, { autoAlpha: 1, duration: 0.18, overwrite: true });
-        });
-        area.addEventListener("mouseleave", function () {
-          gsap.to(cursor, { autoAlpha: 0, duration: 0.18, overwrite: true });
-        });
-      });
 
       document.querySelectorAll(".button, .nav a, .login, .feature-card, .price-card, .model-chip").forEach(function (item) {
         item.addEventListener("mouseenter", function () {

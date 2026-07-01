@@ -100,14 +100,15 @@
     }
 
     .nav-toggle {
+      position: relative;
       display: none;
       width: 42px;
       aspect-ratio: 1;
-      place-items: center;
       border: 1px solid var(--line);
       border-radius: 12px;
       color: var(--ink);
-      background: rgba(255, 255, 255, 0.04);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.085), rgba(255, 255, 255, 0.025));
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
       cursor: pointer;
     }
 
@@ -115,20 +116,23 @@
     .nav-toggle::before,
     .nav-toggle::after {
       content: "";
-      display: block;
-      width: 18px;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 19px;
       height: 2px;
       border-radius: 2px;
       background: currentColor;
-      transition: transform 160ms ease, opacity 160ms ease;
+      transform: translate(-50%, -50%);
+      transition: transform 180ms ease, opacity 160ms ease, width 160ms ease;
     }
 
     .nav-toggle::before {
-      transform: translateY(-6px);
+      transform: translate(-50%, calc(-50% - 6px));
     }
 
     .nav-toggle::after {
-      transform: translateY(6px);
+      transform: translate(-50%, calc(-50% + 6px));
     }
 
     .site-nav {
@@ -954,6 +958,7 @@
 
       .site-header {
         grid-template-columns: auto auto;
+        width: 100%;
         min-height: 58px;
         padding: 8px 10px 8px 14px;
       }
@@ -965,8 +970,8 @@
       .nav-toggle {
         display: grid;
         justify-self: end;
-        width: 38px;
-        border-radius: 10px;
+        width: 40px;
+        border-radius: 12px;
       }
 
       .site-nav,
@@ -1002,11 +1007,11 @@
       }
 
       .site-header.is-open .nav-toggle::before {
-        transform: translateY(2px) rotate(45deg);
+        transform: translate(-50%, -50%) rotate(45deg);
       }
 
       .site-header.is-open .nav-toggle::after {
-        transform: translateY(-2px) rotate(-45deg);
+        transform: translate(-50%, -50%) rotate(-45deg);
       }
 
       .hero {
@@ -1026,6 +1031,11 @@
         max-width: 100%;
       }
 
+      .hero-copy p {
+        max-width: 100%;
+        margin-bottom: 24px;
+      }
+
       .metric-grid,
       .dashboard-grid,
       .bottom-grid {
@@ -1039,20 +1049,14 @@
         display: flex;
         grid-template-columns: none;
         gap: 12px;
-        width: calc(100% + 32px);
+        width: 100%;
         max-width: none;
-        margin-inline: -16px;
-        padding-inline: 16px;
+        margin-inline: 0;
+        padding-inline: 0 16px;
         overflow-x: auto;
         overscroll-behavior-x: contain;
         scroll-snap-type: x mandatory;
         scrollbar-width: none;
-      }
-
-      .proof-row {
-        width: 100%;
-        margin-inline: 0;
-        padding-inline: 0;
       }
 
       .proof-row::-webkit-scrollbar,
@@ -1066,12 +1070,12 @@
       .provider,
       .step,
       .price-card {
-        flex: 0 0 min(78vw, 310px);
+        flex: 0 0 min(82%, 320px);
         scroll-snap-align: start;
       }
 
       .providers-title {
-        flex: 0 0 min(74vw, 280px);
+        flex: 0 0 min(72%, 280px);
         min-height: 92px;
         scroll-snap-align: start;
       }

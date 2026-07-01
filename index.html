@@ -8,7 +8,7 @@
   <meta name="description" content="DujiAPI 聚合 OpenAI、Claude、Gemini、DeepSeek 等主流 AI 模型，提供统一 API、智能路由、用量监控与灵活订阅。">
   <style>
     :root {
-      --bg: #09090b;
+      --bg: #000000;
       --ink: #fafafa;
       --muted: #a1a1aa;
       --line: rgba(255, 255, 255, 0.11);
@@ -60,13 +60,7 @@
       inset: 0;
       pointer-events: none;
       z-index: -1;
-      background:
-        radial-gradient(circle at 50% 0%, rgba(140, 239, 71, 0.13), transparent 28%),
-        radial-gradient(circle at 90% 22%, rgba(96, 165, 250, 0.1), transparent 24%),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
-        linear-gradient(180deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
-        #09090b;
-      background-size: auto, auto, 72px 72px, 72px 72px, auto;
+      background: #000000;
     }
 
     a {
@@ -92,7 +86,7 @@
       gap: 18px;
       margin-bottom: clamp(22px, 4vw, 44px);
       padding: 12px;
-      border: 1px solid var(--line);
+      border: 0;
       border-radius: 999px;
       background: rgba(9, 9, 11, 0.78);
       box-shadow: var(--shadow-sm), inset 0 1px 0 rgba(255, 255, 255, 0.08);
@@ -168,14 +162,10 @@
       place-items: center;
       overflow: hidden;
       padding: clamp(26px, 3.4vw, 48px) clamp(20px, 5vw, 72px) clamp(18px, 2.4vw, 32px);
-      border: 1px solid var(--line);
+      border: 0;
       border-radius: calc(var(--radius) + 14px);
-      background:
-        radial-gradient(circle at 50% 82%, rgba(255, 255, 255, 0.075), transparent 28%),
-        radial-gradient(circle at 50% 54%, rgba(140, 239, 71, 0.08), transparent 25%),
-        linear-gradient(180deg, rgba(39, 39, 42, 0.5), rgba(9, 9, 11, 0.92)),
-        var(--bg);
-      box-shadow: var(--shadow), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      background: #000000;
+      box-shadow: none;
       isolation: isolate;
     }
 
@@ -189,11 +179,8 @@
 
     .hero::before {
       inset: 0 clamp(18px, 5vw, 78px);
-      border-inline: 1px solid rgba(255, 255, 255, 0.06);
-      background:
-        linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px),
-        linear-gradient(180deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
-      background-size: 72px 72px;
+      border-inline: 0;
+      background: none;
       mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.92), transparent 88%);
     }
 
@@ -204,9 +191,9 @@
       height: min(30vw, 340px);
       transform: translateX(-50%);
       border-radius: 50%;
-      background: radial-gradient(ellipse, rgba(255, 255, 255, 0.18), rgba(140, 239, 71, 0.08) 34%, transparent 70%);
+      background: radial-gradient(ellipse, rgba(255, 255, 255, 0.1), rgba(140, 239, 71, 0.05) 34%, transparent 70%);
       filter: blur(26px);
-      opacity: 0.78;
+      opacity: 0.56;
     }
 
     .hero-copy,
@@ -230,7 +217,7 @@
       gap: 8px;
       margin-bottom: 18px;
       padding: 9px 15px;
-      border: 1px solid var(--line);
+      border: 0;
       border-radius: 999px;
       color: var(--muted);
       background: rgba(24, 24, 27, 0.72);
@@ -295,7 +282,7 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      border: 1px solid var(--line);
+      border: 0;
       border-radius: 999px;
       padding: 0 24px;
       font-weight: 950;
@@ -414,7 +401,7 @@
       aspect-ratio: 1;
       display: grid;
       place-items: center;
-      border: 1px solid rgba(255, 255, 255, 0.16);
+      border: 0;
       border-radius: calc(var(--radius) + 8px);
       color: rgba(255, 255, 255, 0.72);
       background:
@@ -476,41 +463,25 @@
       align-items: center;
       gap: 18px;
       padding: 22px;
-      border: 1px solid var(--line);
+      border: 0;
       border-radius: var(--radius);
       color: rgba(255, 255, 255, 0.82);
-      background:
-        radial-gradient(circle at 18% 0%, rgba(140, 239, 71, 0.12), transparent 36%),
-        linear-gradient(135deg, rgba(39, 39, 42, 0.86), rgba(9, 9, 11, 0.92)),
-        var(--card);
-      box-shadow:
-        0 18px 54px rgba(0, 0, 0, 0.36),
-        inset 0 1px 0 rgba(255, 255, 255, 0.12);
-      backdrop-filter: blur(18px) saturate(1.25);
-      -webkit-backdrop-filter: blur(18px) saturate(1.25);
+      background: #000000;
+      box-shadow: none;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
     }
 
     .metric:nth-child(2) {
-      background:
-        radial-gradient(circle at 18% 0%, rgba(96, 165, 250, 0.13), transparent 36%),
-        linear-gradient(135deg, rgba(39, 39, 42, 0.86), rgba(9, 9, 11, 0.92)),
-        var(--card);
+      background: #000000;
     }
 
     .metric:nth-child(3) {
-      background:
-        radial-gradient(circle at 18% 0%, rgba(244, 114, 182, 0.13), transparent 36%),
-        linear-gradient(135deg, rgba(39, 39, 42, 0.86), rgba(9, 9, 11, 0.92)),
-        var(--card);
+      background: #000000;
     }
 
     .metric::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), transparent 42%);
-      opacity: 0.82;
-      pointer-events: none;
+      content: none;
     }
 
     .metric > * {
@@ -564,9 +535,9 @@
       margin-top: clamp(18px, 3vw, 34px);
       padding: clamp(28px, 5vw, 68px);
       border-radius: calc(var(--radius) + 12px);
-      background: rgba(9, 9, 11, 0.72);
-      border: 1px solid var(--line);
-      box-shadow: 0 20px 58px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+      background: transparent;
+      border: 0;
+      box-shadow: none;
       backdrop-filter: blur(16px) saturate(1.08);
       -webkit-backdrop-filter: blur(16px) saturate(1.08);
     }
@@ -608,10 +579,10 @@
       overflow: hidden;
       min-height: 260px;
       padding: 22px;
-      border: 1px solid var(--line);
+      border: 0;
       border-radius: var(--radius);
-      background: var(--card);
-      box-shadow: var(--shadow-sm);
+      background: #000000;
+      box-shadow: none;
       transform-origin: center;
       will-change: transform;
     }
@@ -626,8 +597,11 @@
       pointer-events: none;
     }
 
+    .feature-card::before {
+      content: none;
+    }
+
     .feature-card:hover,
-    .price-card:hover,
     .model-chip:hover {
       border-color: rgba(255, 255, 255, 0.18);
       background: var(--card-hover);
@@ -709,10 +683,10 @@
       align-content: center;
       gap: 8px;
       padding: 16px;
-      border: 1px solid var(--line);
+      border: 0;
       border-radius: var(--radius);
-      background: var(--card);
-      box-shadow: var(--shadow-sm);
+      background: #000000;
+      box-shadow: none;
       font-weight: 950;
     }
 
@@ -730,6 +704,9 @@
       min-height: 330px;
       display: flex;
       flex-direction: column;
+      border: 1px solid var(--line);
+      background: var(--card);
+      box-shadow: var(--shadow-sm);
     }
 
     .price-card.featured {

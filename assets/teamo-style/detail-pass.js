@@ -3,13 +3,20 @@
   const $$ = (s, p = document) => [...p.querySelectorAll(s)];
 
   const navItems = [
-    ['首页', '#top'], ['实时价格', '#pricing'], ['接入 Codex', '#quickstart'],
-    ['API 文档', '/rankings'], ['控制台', '/dashboard/overview'], ['邀请返现', '/dashboard/overview?tab=aff']
+    ['主页', 'https://suxintoken.com/'],
+    ['控制台', 'https://suxintoken.com/dashboard'],
+    ['模型广场', 'https://suxintoken.com/pricing'],
+    ['排行榜', 'https://suxintoken.com/rankings'],
+    ['文档', 'https://docs.newapi.pro'],
+    ['关于', 'https://suxintoken.com/about'],
+    ['邀请返现', 'https://suxintoken.com/wallet']
   ];
   const links = $('#links');
-  if (links) links.innerHTML = `<div class="nav-sheet-head"><span class="nav-grip" aria-hidden="true"></span><a class="nav-login-m" href="/sign-in">开始使用</a></div>${navItems.map(([label, href], i) =>
-    `<a class="nav-menu-item${i === 0 ? ' is-active' : ''}" href="${href}">${label}${i === 5 ? '<img class="nav-gift" src="assets/teamo-style/gift-badge.webp" alt="">' : ''}</a>`
+  if (links) links.innerHTML = `<div class="nav-sheet-head"><span class="nav-grip" aria-hidden="true"></span><a class="nav-login-m" href="https://suxintoken.com/sign-in">开始使用</a></div>${navItems.map(([label, href], i) =>
+    `<a class="nav-menu-item${i === 0 ? ' is-active' : ''}" href="${href}">${label}${i === navItems.length - 1 ? '<img class="nav-gift" src="assets/teamo-style/gift-badge.webp" alt="">' : ''}</a>`
   ).join('')}`;
+
+  $$('.actions .btn').forEach(button => { button.href = 'https://suxintoken.com/sign-in'; });
 
   const globe = $('.globe');
   if (globe) {

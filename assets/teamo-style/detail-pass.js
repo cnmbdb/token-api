@@ -16,7 +16,7 @@
     `<a class="nav-menu-item${i === 0 ? ' is-active' : ''}" href="${href}">${label}${i === navItems.length - 1 ? '<img class="nav-gift" src="assets/teamo-style/gift-badge.webp" alt="">' : ''}</a>`
   ).join('')}`;
 
-  $$('.actions .btn').forEach(button => { button.href = 'https://suxintoken.com'; });
+  $$('.actions .btn').forEach(button => { button.href = 'https://suxintoken.com/sign-in'; });
 
   const globe = $('.globe');
   if (globe) {
@@ -441,10 +441,10 @@
     window.__sectionRevealMedia = revealMedia;
   }
 
-  // All button-like navigation leaves the static landing page through the
-  // canonical new-api domain. Pure interaction controls remain local.
+  // General CTA navigation enters the new-api authentication flow. Pure
+  // interaction controls and menu-specific destinations remain unchanged.
   $$('a.btn, a.cardcta, a.option, .qs-other a, a.nav-login-m').forEach(link => {
-    link.href = 'https://suxintoken.com';
+    link.href = 'https://suxintoken.com/sign-in';
   });
   startSectionReveals();
 })();

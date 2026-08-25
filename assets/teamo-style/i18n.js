@@ -21,10 +21,10 @@
       pricing: ['实时价格 · 低至 1 折', '价格实时更新，折扣随上游成本波动；每次调用按请求时的实时折扣结算。<br>价格单位：USD / 1M Tokens。', '上下文 1M', '支持 Fast Mode', '输入 / 1M TOKENS', '输出 / 1M TOKENS', '快速接入', '查看全部模型价格'],
       stats: ['昨日路由 tokens', '提示缓存命中率', '路由 SLA', '新模型支持速度', '小时级'],
       pay: ['按量付费，', '用多少付多少', '你的账户统一按美元计费，按模型自动计价，无月费、无订阅。', '购买额度', '快速接入', '美元计费 · 无最低消费 · 随时充值 · 支持支付宝'],
-      quick: ['快速开始', '100% 协议兼容，只改一行 Base URL，即可接入生产环境；<br>使用 suxin，无需复杂配置即可接入 Codex / Claude Code。', '同样适用于 Codex、Claude Desktop、OpenClaw、CC-Switch，以及任何兼容 OpenAI 协议的客户端。', '查看 API 文档', '接入生产环境或 Agent Harness', '免安装，一键接入', '获取 API Key 并开始调用'],
+      quick: ['快速开始', '100% 协议兼容，只改一行 Base URL，即可接入生产环境；<br>只需下载 Teamo 客户端，即可一键接入 Codex / CC。', '同样适用于 Codex、Claude Desktop、OpenClaw、CC-Switch，以及任何兼容 OpenAI 协议的客户端。', '查看 API 文档', '接入生产环境或 Agent Harness', '免 Key，一键接入 Codex', '下载 Teamo 客户端，自动完成配置（新手推荐）'],
       methodTabs: ['API', 'Codex 客户端', 'Claude 客户端', '命令行', '其他'],
       methodDescriptions: {codex:'Codex 客户端：设置 OPENAI_BASE_URL=https://suxin.ai/v1',claude:'Claude 客户端：将兼容端点设置为 https://suxin.ai',cli:'命令行：导出 SUXIN_API_KEY 后即可调用。',other:'其他兼容 OpenAI 协议的客户端只需替换 Base URL。'},
-      metrics: ['一个敢用于生产环境的路由层', '三项核心指标均来自生产环境实测，与首页实时数据同源可查证。', ['价格 · PRICE','延迟 · FIRST TOKEN','可用性 · UPTIME'], '1 折', ['2000+ 供应商实时竞价与质量监控，让每次请求打出极致折扣——全模型实时竞价数据首页透明可见。','请求延迟、推理速度打平官方——来自全网生产流量实测，慢速渠道分钟级封禁，实时数据首页可见。','独家 Harness Routing 技术，生产级 SLA + Cache 率保障：多通道故障自动切换、7×24 服务不中断。']],
+      metrics: ['一个敢用于生产环境的路由层', '三项核心指标均来自生产环境实测，与首页实时数据同源可查证。', ['价格 · PRICE','延迟 · FIRST TOKEN','可用性 · UPTIME'], '1折', ['2000+供应商实时竞价&质量监控，让每次请求打出极致折扣——全模型实时竞价数据首页透明可见。','请求延迟、推理速度打平官方——来自全网生产流量实测，慢速渠道分钟级封禁，实时数据首页可见。','独家 Harness Routing 技术，生产级 SLA+Cache 率保障：多通道故障自动切换、7×24 服务不中断。']],
       trust: ['为什么选 suxin？','可低成本稳定运行 Agent Harness 任务，模型表现与成本控制稳定、可审计。','这个价格是怎么做到的？','一个账户，一张账单。上游供应商由我们逐家验。',['模型不降级','数据隐私','消费可追踪','供应商竞价网络','规模化采购','平台补贴'],['请求直达已验证上游，不静默替换模型。','Prompt 与结果只用于路由、计量与技术支持。','预算和路由策略可控，账单逐条可查。','聚合多模型供应商，持续监控价格与质量。','企业级用量承诺带来更好的采购成本。','把运营效率持续回馈给正在增长的用户。']],
       route: ['路由方案','生产级路由算法','严格保障效率，通过多级容灾和效率敏感的路由策略优先保障服务质量，响应稳稳接住、始终丝滑，高峰期和官方宕机时可能折扣变少，但不会超过官方原价。',['价格','低至官方原价 1 折','延迟','智能选择更快通道','适用','生产环境与研发团队','保障','多级容灾'],['可用性','成本','延迟'],'统一请求入口'],
       routeStates: {availability:['容灾切换','高可用通道已接管'],cost:['实时竞价','当前最优价格通道'],latency:['延迟优先','首字更快通道']},
@@ -109,12 +109,8 @@
     if (pill) pill.innerHTML = `<i class="dot"></i>${d.pill}`;
     window.__setHeroTitleFrames?.(d.titleFrames);
     const heroButtons = $$('.hero-buttons .btn');
-    if (heroButtons[0]) {
-      const icon = heroButtons[0].querySelector('img');
-      heroButtons[0].textContent = d.heroButtons[0];
-      if (icon) heroButtons[0].prepend(icon);
-    }
-    if (heroButtons[1]) heroButtons[1].textContent = d.heroButtons[1];
+    if (heroButtons[0]) setText('.hero-key-btn .hero-cta-label', d.heroButtons[0]);
+    if (heroButtons[1]) setText('.hero-client-btn .hero-cta-label', d.heroButtons[1]);
     $$('.protocol-menu button').forEach((button, index) => {
       button.textContent = d.protocol[index];
       button.dataset.name = d.protocol[index];
@@ -144,7 +140,7 @@
     setText('.pay p', d.pay[2]); setTexts('.paybuttons .btn', d.pay.slice(3, 5)); setText('.pay small', d.pay[5]);
     setText('#quickstart .head h2', d.quick[0]); setHtml('#quickstart .head p', d.quick[1]); setText('#quickstart .aside > p', d.quick[2]);
     const options = $$('#quickstart .option');
-    options.forEach((option, index) => { setText('b', d.quick[3 + index * 2], option); setText('span', d.quick[4 + index * 2], option); });
+    options.forEach((option, index) => { setText('b', d.quick[3 + index * 2], option); setText('span:not(.option-icon)', d.quick[4 + index * 2], option); });
     setTexts('#methodTabs button', d.methodTabs); setText('#copyCode', d.copy);
     const activeMethod = $('#methodTabs .active')?.dataset.method;
     if (activeMethod && activeMethod !== 'api') { setText('#filename', d.integrationGuide); setText('#code', d.methodDescriptions[activeMethod]); }

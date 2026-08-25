@@ -98,8 +98,15 @@
   window.__setHeroTitleFrames = renderHeroTitle;
 
   const heroCtas = $$('.hero-buttons .btn');
-  if (heroCtas[0]) heroCtas[0].innerHTML = '<img class="key-icon" src="assets/teamo-style/key.webp" alt="">获取 API Key';
-  if (heroCtas[1]) { heroCtas[1].textContent = '下载客户端'; heroCtas[1].href = '#quickstart'; }
+  if (heroCtas[0]) {
+    heroCtas[0].classList.add('hero-key-btn');
+    heroCtas[0].innerHTML = '<span class="hero-key-knob" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z"></path><circle cx="16.5" cy="7.5" r=".5" fill="currentColor"></circle></svg></span><span class="hero-cta-label">获取 API Key</span>';
+  }
+  if (heroCtas[1]) {
+    heroCtas[1].classList.add('hero-client-btn');
+    heroCtas[1].innerHTML = '<span class="hero-cta-label">下载客户端</span>';
+    heroCtas[1].href = '#quickstart';
+  }
 
   const routes = $('.routes');
   if (routes) routes.innerHTML = `

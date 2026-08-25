@@ -94,13 +94,14 @@
     $('meta[name="description"]')?.setAttribute('content', d.meta[1]);
     document.documentElement.style.setProperty('--free-note', JSON.stringify(d.freeNote));
 
-    const navLinks = $$('#links a');
+    const navLinks = $$('#links .nav-menu-item');
     navLinks.forEach((link, index) => {
       const gift = link.querySelector('img');
       link.textContent = d.nav[index];
       if (gift) link.append(gift);
     });
     setText('.actions .btn', d.start);
+    setText('.nav-login-m', d.start);
     $('#hamb')?.setAttribute('aria-label', d.menu);
     $('#languageToggle')?.setAttribute('aria-label', d.language);
     $('#languageToggle')?.setAttribute('title', `${d.language}: ${languageNames[lang]}`);
@@ -117,7 +118,7 @@
     });
     const activeProtocol = $$('.protocol-menu button').find(button => button.dataset.url === $('#baseUrl')?.textContent);
     setText('#protocolLabel', activeProtocol?.dataset.name || d.protocol[0]);
-    setText('#copyBase', d.copy);
+    $('#copyBase')?.setAttribute('aria-label', `${d.copy} Base URL`);
 
     setText('.route-note.left', d.routeHero[0]); setText('.route-note.right', d.routeHero[1]);
     setText('.route-hub b', d.routeHero[2]); setText('.client-count', d.routeHero[3]);
@@ -136,8 +137,14 @@
     setText('#pricing .center .btn', d.pricing[7]); setTexts('#pricing .stat span', d.stats.slice(0, 4));
     const speed = $$('#pricing .stat strong')[3]; if (speed) speed.textContent = d.stats[4];
 
-    const payTitle = $('.pay h2'); if (payTitle) payTitle.innerHTML = `${d.pay[0]}<span class="grad">${d.pay[1]}</span>`;
-    setText('.pay p', d.pay[2]); setTexts('.paybuttons .btn', d.pay.slice(3, 5)); setText('.pay small', d.pay[5]);
+    const payTitle = $('.pay h2'); if (payTitle) payTitle.innerHTML = `<span>${d.pay[0]}</span><span class="grad">${d.pay[1]}</span>`;
+    setText('.pay p', d.pay[2]);
+    $$('.paybuttons .btn').forEach((button, index) => {
+      const label = $('.pay-label', button);
+      if (label) label.textContent = d.pay[3 + index];
+      else button.textContent = d.pay[3 + index];
+    });
+    setText('.pay small', d.pay[5]);
     setText('#quickstart .head h2', d.quick[0]); setHtml('#quickstart .head p', d.quick[1]); setText('#quickstart .aside > p', d.quick[2]);
     const options = $$('#quickstart .option');
     options.forEach((option, index) => { setText('b', d.quick[3 + index * 2], option); setText('span:not(.option-icon)', d.quick[4 + index * 2], option); });
@@ -159,9 +166,9 @@
     window.__refreshModelList?.();
     $$('#live .chartmetrics strong').slice(0, 3).forEach(el => { el.textContent = `${numberFrom(el.textContent)}${d.discountSuffix}`; });
 
-    setText('#ranking .head h2', d.ranking[0]); setText('#ranking .head p', d.ranking[1]); setTexts('#ranking .rank h3', d.ranking[2]); setTexts('#ranking .rank > p', d.ranking[3]);
-    $$('#ranking .rank:nth-child(2) small').forEach(el => { const value = numberFrom(el.textContent); el.textContent = `${d.ranking[4]} ${value}K ${d.ranking[5]}`; });
-    $$('#ranking .rank:nth-child(3) small').forEach(el => { const value = numberFrom(el.textContent); el.textContent = `${d.ranking[6]} ${value}%`; });
+    setText('#ranking .head h2', d.ranking[0]); setText('#ranking .head p', d.ranking[1]); setTexts('#ranking .rank h3', d.ranking[2]);
+    setText('#ranking .rank-usage-head p', d.ranking[3][0]); setText('#ranking .rank-agent > p', d.ranking[3][1]); setText('#ranking .rank-model > p', d.ranking[3][2]);
+    window.__refreshDailyRanking?.([...d.ranking[2], ...d.ranking[3], d.ranking[4], d.ranking[5], d.ranking[6]]);
     setText('.buy h2', d.buy[0]); setText('.buy p', d.buy[1]); setText('.buy .btn', d.buy[2]); setText('.buy small', d.buy[3]);
 
     setText('#faq .head h2', d.faqTitle);
@@ -208,10 +215,12 @@
         if (!country || data.success === false) throw new Error('IP country unavailable');
         return country;
       };
-      const country = await Promise.any([
-        lookup('https://ipwho.is/?fields=success,country_code', 'country_code'),
-        lookup('https://api.country.is/', 'country')
-      ]);
+      let country;
+      try {
+        country = await lookup('https://api.country.is/', 'country');
+      } catch {
+        country = await lookup('https://ipwho.is/?fields=success,country_code', 'country_code');
+      }
       return { language: languageForCountry(country), country };
     } catch {
       return { language: 'en', country: '' };

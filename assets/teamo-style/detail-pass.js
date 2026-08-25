@@ -7,10 +7,9 @@
     ['API 文档', '/rankings'], ['控制台', '/dashboard/overview'], ['邀请返现', '/dashboard/overview?tab=aff']
   ];
   const links = $('#links');
-  if (links) links.innerHTML = navItems.map(([label, href], i) =>
-    `<a href="${href}">${label}${i === 5 ? '<img class="nav-gift" src="assets/teamo-style/gift-badge.webp" alt="">' : ''}</a>`
-  ).join('');
-  $$('#links a').forEach(a => a.addEventListener('click', () => $('#nav')?.classList.remove('open')));
+  if (links) links.innerHTML = `<div class="nav-sheet-head"><span class="nav-grip" aria-hidden="true"></span><a class="nav-login-m" href="/sign-in">开始使用</a></div>${navItems.map(([label, href], i) =>
+    `<a class="nav-menu-item${i === 0 ? ' is-active' : ''}" href="${href}">${label}${i === 5 ? '<img class="nav-gift" src="assets/teamo-style/gift-badge.webp" alt="">' : ''}</a>`
+  ).join('')}`;
 
   const globe = $('.globe');
   if (globe) {
@@ -18,7 +17,22 @@
     globe.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path><path d="M2 12h20"></path></svg>';
   }
   const hamburger = $('#hamb');
-  if (hamburger) hamburger.innerHTML = '<svg class="ic-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"></path></svg><svg class="ic-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>';
+  const nav = $('#nav');
+  const navScrim = $('#navScrim');
+  const setNavOpen = open => {
+    nav?.classList.toggle('open', open);
+    hamburger?.setAttribute('aria-expanded', String(open));
+    links?.setAttribute('aria-hidden', String(!open));
+    navScrim?.setAttribute('aria-hidden', String(!open));
+    document.body.classList.toggle('nav-menu-open', open);
+  };
+  if (hamburger) {
+    hamburger.innerHTML = '<svg class="ic-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"></path></svg><svg class="ic-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>';
+    hamburger.onclick = () => setNavOpen(!nav?.classList.contains('open'));
+  }
+  navScrim?.addEventListener('click', () => setNavOpen(false));
+  $$('#links a').forEach(a => a.addEventListener('click', () => setNavOpen(false)));
+  document.addEventListener('keydown', event => { if (event.key === 'Escape') setNavOpen(false); });
 
   $$('.brand img, .core img').forEach(img => {
     img.src = 'assets/teamo-style/logo-suxin.png';
@@ -145,9 +159,8 @@
   setText('.routecopy > p', '严格保障效率，通过多级容灾和效率敏感的路由策略优先保障服务质量，响应稳稳接住、始终丝滑，高峰期和官方宕机时可能折扣变少，但不会超过官方原价。');
   setText('#live .head p', '折扣随上游成本按小时浮动，数据实时更新；每次调用按请求时的实时折扣结算。');
   setText('#ranking .head p', '每日零点刷新');
-  const rankPs = $$('.rank > p');
-  if (rankPs[1]) rankPs[1].textContent = '按客户端周调用量排名 · 趋势为周环比';
-  if (rankPs[2]) rankPs[2].textContent = '按模型周调用量排名 · 趋势为周环比';
+  setText('#ranking .rank-agent > p', '按客户端周调用量排名 · 趋势为周环比');
+  setText('#ranking .rank-model > p', '按模型周调用量排名 · 趋势为周环比');
   setText('.buy p', '现在充值，让每一次调用都跑在更低的成本上。美元余额持续保留在你的账户中，随用随扣。');
   $('.buy .btn')?.insertAdjacentHTML('afterend', '<small>美元计费 · 无最低消费 · 随时充值 · 支持支付宝</small>');
   setText('.footbrand p', '为企业和专业人士打造的 Agentic LLM 统一网关');
@@ -186,6 +199,132 @@
   }
   startRouteCanvas();
 
+  function startDailyRanking() {
+    const plot = $('#usagePlot');
+    const agentList = $('#agentRanking');
+    const modelList = $('#modelRanking');
+    if (!plot || !agentList || !modelList) return;
+
+    const DAY = 86400000;
+    const anchor = Date.UTC(2026, 7, 25) / DAY;
+    const now = new Date();
+    const today = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()) / DAY;
+    const elapsed = Math.max(0, today - anchor);
+    const dailyGain = 24_586_206_897;
+    const todayTotal = 1_000_000_000_000 + elapsed * dailyGain;
+    const defaultCopy = ['模型使用量', 'Agent 排行榜', '模型排行榜', '每日经 suxin 路由的 token 总量', '按客户端周调用量排名 · 趋势为周环比', '按模型周调用量排名 · 趋势为周环比', '任务', '次', '成功率'];
+    let copy = defaultCopy;
+
+    const agents = [
+      ['Codex Desktop', 'assets/teamo-style/openai.svg', 16410.1, 1998.9, 20.6],
+      ['Claude CLI', 'assets/teamo-style/claude-ranking.svg', 4699, 782.6, 103.0],
+      ['VSCode', 'assets/teamo-style/vscode.svg', 1488.5, 185.3, 18.5],
+      ['OpenCode', 'assets/teamo-style/openai.svg', 839.4, 158.1, 70.9],
+      ['OpenClaw', 'assets/teamo-style/openclaw.svg', 1099.5, 152.3, 43.5]
+    ];
+    const models = [
+      ['GPT-5.6 Sol', 'assets/teamo-style/openai.svg', 2048, 99.43, 2260.8, 29.3],
+      ['DeepSeek V4 Flash', 'assets/teamo-style/route-deepseek.svg', 1450, 99.59, 1113.4, 129.4],
+      ['GPT-5.6 Terra', 'assets/teamo-style/openai.svg', 2321, 99.62, 592.6, 51.5],
+      ['Claude Opus 5', 'assets/teamo-style/claude-ranking.svg', 2337, 99.42, 563.5, 58.2],
+      ['GPT-5.6 Luna', 'assets/teamo-style/openai.svg', 2058, 99.48, 456.4, 11.3]
+    ];
+    const formatToken = value => value >= 1e12 ? `${(value / 1e12).toFixed(1)}T` : `${(value / 1e9).toFixed(1)}B`;
+    const formatAxis = value => {
+      const unit = value >= 1e12 ? 'T' : 'B';
+      const scaled = value / (value >= 1e12 ? 1e12 : 1e9);
+      return `${Number.isInteger(scaled) ? scaled.toFixed(0) : scaled.toFixed(1)}${unit}`;
+    };
+    const formatDate = date => `${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}`;
+    const locale = () => document.documentElement.lang || 'zh-CN';
+
+    function series() {
+      return Array.from({ length: 30 }, (_, index) => {
+        const distance = 29 - index;
+        const date = new Date((today - distance) * DAY);
+        const total = todayTotal - distance * dailyGain;
+        const wave = ((today - distance) % 7 + 7) % 7;
+        const weights = [.52 + wave * .004, .255 - wave * .003, .075, .052, .036, .024 + (wave % 3) * .004, .038];
+        const sum = weights.reduce((a, b) => a + b, 0);
+        return { date, total, weights: weights.map(value => value / sum) };
+      });
+    }
+
+    function renderChart() {
+      const data = series();
+      const axisMax = Math.ceil(todayTotal / 400_000_000_000) * 400_000_000_000;
+      const axis = $('#usageYAxis');
+      if (axis) axis.innerHTML = [axisMax, axisMax * 2 / 3, axisMax / 3, 0].map(formatAxis).map(value => `<span>${value}</span>`).join('');
+      const mobile = matchMedia('(max-width: 640px)').matches;
+      plot.innerHTML = data.map((day, index) => {
+        const visibleDate = mobile ? [0, 14, 29].includes(index) : (index % 3 === 0 || index === 29);
+        const totalHeight = day.total / axisMax * 100;
+        const segments = day.weights.map(weight => `<span class="usage-seg" style="height:${(weight * totalHeight).toFixed(4)}%"></span>`).join('');
+        return `<button class="usage-col" type="button" data-index="${index}" aria-label="${formatDate(day.date)} ${formatToken(day.total)} tokens">${segments}${visibleDate ? `<span class="usage-date">${formatDate(day.date)}</span>` : ''}</button>`;
+      }).join('');
+
+      const tooltip = $('#usageTooltip');
+      const show = column => {
+        const day = data[Number(column.dataset.index)];
+        const bounds = column.getBoundingClientRect();
+        const shell = column.closest('.usage-chart-shell').getBoundingClientRect();
+        const left = Math.min(Math.max(bounds.left - shell.left + bounds.width / 2 - 87, 2), shell.width - 178);
+        tooltip.style.left = `${left}px`;
+        tooltip.style.top = `${Math.max(6, bounds.top - shell.top - 48)}px`;
+        tooltip.innerHTML = `<strong><span>${formatDate(day.date)}</span><b>${formatToken(day.total)}</b></strong><span>GPT-5.6 Sol <b>${formatToken(day.total * day.weights[0])}</b></span><span>GPT-5.6 Terra <b>${formatToken(day.total * day.weights[1])}</b></span><span>Claude Opus 5 <b>${formatToken(day.total * day.weights[2])}</b></span>`;
+        tooltip.hidden = false;
+      };
+      const hide = () => { tooltip.hidden = true; };
+      $$('.usage-col', plot).forEach(column => {
+        column.addEventListener('mouseenter', () => show(column));
+        column.addEventListener('focus', () => show(column));
+        column.addEventListener('mouseleave', hide);
+        column.addEventListener('blur', hide);
+      });
+      if (window.gsap && window.ScrollTrigger && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        gsap.fromTo($$('.usage-col', plot), { scaleY: 0 }, { scaleY: 1, duration: .72, stagger: .018, ease: 'power3.out', scrollTrigger: { trigger: plot, start: 'top 86%', toggleActions: 'play none none reverse' } });
+      }
+    }
+
+    function renderLists() {
+      const growthScale = 1 + elapsed * .012;
+      agentList.innerHTML = agents.map((item, index) => `<li><span class="rank-pos">${index + 1}.</span><span class="rank-icon"><img src="${item[1]}" alt=""></span><span class="rank-copy"><b>${item[0]}</b><small>${copy[6]} ${(item[2] * growthScale).toFixed(1)}K ${copy[7]}</small></span><span class="rank-value"><strong>${(item[3] * growthScale).toFixed(1)}B</strong><span>tokens</span><i class="trend">↗ ${(item[4] + elapsed * .2).toFixed(1)}%</i></span></li>`).join('');
+      modelList.innerHTML = models.map((item, index) => `<li><span class="rank-pos">${index + 1}.</span><span class="rank-icon"><img src="${item[1]}" alt=""></span><span class="rank-copy"><b>${item[0]}</b><small>TTFT ${item[2]}ms · ${copy[8]} ${item[3].toFixed(2)}%</small></span><span class="rank-value"><strong>${(item[4] * growthScale).toFixed(1)}B</strong><span>tokens</span><i class="trend">↗ ${(item[5] + elapsed * .2).toFixed(1)}%</i></span></li>`).join('');
+    }
+
+    function render(nextCopy) {
+      if (nextCopy?.length) copy = [...nextCopy.slice(0, 3), ...nextCopy.slice(3)];
+      const yesterday = todayTotal - dailyGain;
+      $('#usageTotal').textContent = formatToken(todayTotal);
+      $('#usageGrowth').innerHTML = `↗ ${(dailyGain / yesterday * 100).toFixed(1)}% <em>${locale().startsWith('zh') ? '较昨日' : 'vs yesterday'}</em>`;
+      const updated = new Intl.DateTimeFormat(locale(), { year: 'numeric', month: '2-digit', day: '2-digit' }).format(now);
+      $('#rankingUpdated').textContent = `${locale().startsWith('zh') ? '每日 00:00 刷新 · 最后更新' : 'Updated daily at 00:00 · Last update'} ${updated} 00:00`;
+      renderChart();
+      renderLists();
+    }
+
+    globalThis.__refreshDailyRanking = render;
+    render();
+    document.addEventListener('suxin:languagechange', () => {
+      const languageLabels = {
+        'zh-CN': ['任务', '次', '成功率'], 'zh-TW': ['任務', '次', '成功率'],
+        en: ['Tasks', 'calls', 'Success rate'], ja: ['タスク', '回', '成功率'],
+        ru: ['Задач', 'вызовов', 'Успешность'], 'hi-IN': ['टास्क', 'कॉल', 'सफलता दर']
+      };
+      const labels = languageLabels[locale()] || languageLabels.en;
+      copy = [
+        ...$$('#ranking .rank h3').map(element => element.textContent),
+        $('#ranking .rank-usage-head p')?.textContent || defaultCopy[3],
+        $('#ranking .rank-agent > p')?.textContent || defaultCopy[4],
+        $('#ranking .rank-model > p')?.textContent || defaultCopy[5],
+        ...labels
+      ];
+      render();
+    });
+    addEventListener('resize', () => { clearTimeout(window.__rankingResizeTimer); window.__rankingResizeTimer = setTimeout(renderChart, 120); }, { passive: true });
+  }
+  startDailyRanking();
+
   function startSectionReveals() {
     const root = document.documentElement;
     if (!window.gsap || !window.ScrollTrigger) {
@@ -199,7 +338,6 @@
     const revealGroups = [
       { section: '.proof', items: ['.proofgrid > div', '.social'] },
       { section: '#pricing', items: ['.head > *', '.price', '.center', '.stat'] },
-      { section: '.pay', items: ['.pay > div > *'] },
       { section: '#quickstart', items: ['.head > *', '.aside > *', '.quick > div:last-child'] },
       { section: '.metrics', host: 'section', items: ['.head > *', '.metric'] },
       { section: '.trust', host: 'section', items: ['.trust > div > h3', '.trust > div > p', '.trustcard'] },

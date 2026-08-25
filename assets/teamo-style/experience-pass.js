@@ -184,9 +184,66 @@
   document.addEventListener('suxin:languagechange', event => applyLocale(event.detail.language));
   applyLocale(currentLang);
 
+  const endpoint = $('#heroBaseurl');
+  const protocol = $('#protocol');
+  const endpointUrl = $('#baseUrl');
+  const endpointCopy = $('#copyBase');
+  const renderEndpointUrl = value => {
+    if (!endpointUrl) return;
+    const match = String(value).match(/^(https:\/\/)([^/]+)(.*)$/);
+    if (!match) { endpointUrl.textContent = value; return; }
+    endpointUrl.innerHTML = `<span class="scheme">${match[1]}</span><span class="host">${match[2]}</span><span class="path">${match[3]}</span>`;
+  };
+  $$('.protocol-menu button').forEach(button => {
+    button.classList.toggle('is-on', button.dataset.url === endpointUrl?.textContent);
+    button.onclick = event => {
+      event.stopPropagation();
+      $('#protocolLabel').textContent = button.dataset.name;
+      renderEndpointUrl(button.dataset.url);
+      $$('.protocol-menu button').forEach(item => item.classList.toggle('is-on', item === button));
+      protocol?.classList.remove('open');
+    };
+  });
+  if (protocol) {
+    const syncProtocolState = () => protocol.setAttribute('aria-expanded', String(protocol.classList.contains('open')));
+    new MutationObserver(syncProtocolState).observe(protocol, {attributes:true, attributeFilter:['class']});
+    protocol.addEventListener('keydown', event => {
+      if (event.key !== 'Enter' && event.key !== ' ') return;
+      event.preventDefault(); protocol.click();
+    });
+    syncProtocolState();
+  }
+  if (endpointCopy) endpointCopy.onclick = async () => {
+    try {
+      await navigator.clipboard.writeText(endpointUrl?.textContent || '');
+      endpointCopy.classList.add('copied');
+      endpointCopy.setAttribute('aria-label', window.__i18n?.t('copied') || '已复制');
+      setTimeout(() => {
+        endpointCopy.classList.remove('copied');
+        endpointCopy.setAttribute('aria-label', `${window.__i18n?.t('copy') || '复制'} Base URL`);
+      }, 1000);
+    } catch {
+      endpointCopy.setAttribute('aria-label', window.__i18n?.t('copyFailed') || '复制失败');
+    }
+  };
+
   if (window.gsap && window.ScrollTrigger) {
     gsap.registerPlugin(ScrollTrigger);
     if (!reduced) {
+      const payItems = $$('.pay-inner > *');
+      if (payItems.length) {
+        gsap.timeline({
+          scrollTrigger: {
+            trigger: '.pay-hook',
+            start: 'top 84%',
+            end: 'bottom 12%',
+            toggleActions: 'play reverse play reverse'
+          }
+        }).fromTo(payItems,
+          {autoAlpha:0, y:16, filter:'blur(4px)'},
+          {autoAlpha:1, y:0, filter:'blur(0px)', duration:.72, stagger:.09, ease:'power4.out', clearProps:'filter'}
+        );
+      }
       gsap.fromTo('.rdg-canvas-local', {autoAlpha:0, y:30}, {autoAlpha:1, y:0, duration:.8, ease:'power3.out', scrollTrigger:{trigger:'#route-decision-graph', start:'top 82%', once:true}});
       gsap.fromTo('.finale-copy > *', {autoAlpha:0, y:24}, {autoAlpha:1, y:0, duration:.75, stagger:.12, ease:'power3.out', scrollTrigger:{trigger:'#finale', start:'top 78%', once:true}});
     }
@@ -237,5 +294,5 @@
     resize(); draw(performance.now());
     addEventListener('resize', () => { cancelAnimationFrame(raf); resize(); draw(performance.now()); }, {passive:true});
   };
-  startTunnel();
+  // The former 2D approximation is intentionally not started; finale-webgl.js owns this canvas.
 })();

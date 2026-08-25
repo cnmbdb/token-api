@@ -20,3 +20,99 @@
 .buy{position:relative;isolation:isolate;background-image:url("buy-art-bg-clean.png")}.buy:before{content:"";position:absolute;z-index:0;left:50%;top:37%;width:142px;height:142px;transform:translate(-50%,-50%);background:url("logo-suxin.png") center/contain no-repeat;opacity:.17;pointer-events:none}.buy>div{position:relative;z-index:1}
 .finale-copy{position:relative}.finale-copy:before{content:"";position:absolute;left:50%;top:-88px;width:122px;height:122px;transform:translateX(-50%);background:url("logo-suxin-white.png") center/contain no-repeat;opacity:.22;pointer-events:none}.finale-copy .eyebrow,.finale-copy h2{position:relative;z-index:1}
 @media(max-width:900px){.buy{background-image:url("buy-art-mobile-clean.png")}.buy:before{top:35%;width:112px;height:112px}.finale-copy:before{top:-72px;width:98px;height:98px}}
+
+/* Source-faithful pay-as-you-go hook. */
+.pay.pay-hook{
+  position:relative;isolation:isolate;overflow:hidden;min-height:380px;
+  display:flex;align-items:center;justify-content:center;
+  padding:clamp(36px,5.5vh,60px) 24px;text-align:center;
+  scroll-margin-top:76px;border:0;background:url("buy-hook-bg.jpg") center/cover no-repeat
+}
+.pay-inner{position:relative;width:min(100%,760px);margin:0 auto}
+.pay.pay-hook h2{
+  margin:0;font-size:clamp(28px,3.6vw,42px);font-weight:700;
+  line-height:1.14;letter-spacing:-.02em;color:#14110f
+}
+.pay.pay-hook h2>span{display:inline-block}
+.pay.pay-hook h2 .grad{
+  margin-left:.18em;background:linear-gradient(105deg,#148bff 0%,#4ddfff 34%,#d8f4f4 53%,#f5d1ca 72%,#ff8f79 100%);
+  background-size:240% 160%;background-position:0 50%;-webkit-background-clip:text;background-clip:text;
+  color:transparent;-webkit-text-fill-color:transparent;animation:payAgentFlow 6.5s ease-in-out infinite alternate
+}
+.pay.pay-hook p{max-width:600px;margin:18px auto 0;color:rgba(20,17,15,.68);font-size:clamp(16px,1.5vw,18px);font-weight:500;line-height:1.55;text-wrap:pretty}
+.paybuttons{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:12px;margin:29px 0 0}
+.paybuttons .btn{transform:none;border-radius:0;font-size:19px;font-weight:500;line-height:1;white-space:nowrap}
+.paybuttons .btn:hover{transform:none}
+.pay-primary{
+  position:relative;isolation:isolate;overflow:hidden;height:52px;min-height:52px;
+  padding:0 26px 0 66px;background:#222;color:#fffefb;border:1px solid #222;
+  transition:color .3s ease,padding .34s cubic-bezier(.22,1,.36,1)
+}
+.pay-fill{position:absolute;z-index:-1;inset:2px;background:#fffefb;transform:scaleX(0);transform-origin:left center;transition:transform .34s cubic-bezier(.22,1,.36,1)}
+.pay-knob{
+  position:absolute;left:2px;top:2px;bottom:2px;width:48px;display:inline-flex;align-items:center;justify-content:center;
+  overflow:hidden;background:#fffefb;color:#222;font-family:Arial,sans-serif;font-size:27px;font-weight:400;line-height:1;
+  transition:left .34s cubic-bezier(.22,1,.36,1),background .3s ease
+}
+.pay-knob img{width:22px;height:22px;display:block}
+.pay-label{position:relative;z-index:1}
+.pay-primary:hover,.pay-primary:focus-visible{color:#222;padding:0 66px 0 26px;opacity:1}
+.pay-primary:hover .pay-fill,.pay-primary:focus-visible .pay-fill{transform:scaleX(1)}
+.pay-primary:hover .pay-knob,.pay-primary:focus-visible .pay-knob{left:calc(100% - 50px);background:transparent}
+.pay-primary:hover .pay-knob,.pay-primary:focus-visible .pay-knob{animation:payKnobDash .68s cubic-bezier(.5,0,.3,1) infinite}
+.pay-ghost{height:52px;min-height:52px;padding:0 24px;background:transparent;color:#14110f;border:1px solid #222;transition:background .15s ease,opacity .15s ease}
+.pay-ghost:hover,.pay-ghost:focus-visible{background:rgba(34,34,34,.06)}
+.pay.pay-hook small{display:block;margin-top:15px;color:rgba(20,17,15,.54);font:12.5px/1.5 var(--mono);letter-spacing:.05em}
+@keyframes payAgentFlow{to{background-position:100% 50%}}
+@keyframes payKnobDash{0%{transform:translateX(0);opacity:1}45%{transform:translateX(7px);opacity:.55}70%{transform:translateX(-2px);opacity:1}to{transform:translateX(0);opacity:1}}
+@media(max-width:640px){
+  .pay.pay-hook{min-height:320px;padding:36px 18px}
+  .pay.pay-hook h2{font-size:28px}.pay.pay-hook p{font-size:15px}
+  .paybuttons{gap:10px}.paybuttons .btn{font-size:15.5px;height:48px;min-height:48px;padding:0 18px}
+  .pay-primary .pay-knob,.pay-primary .pay-fill{display:none}.pay-primary:hover,.pay-primary:focus-visible{padding:0 18px;color:#fffefb;opacity:.88}
+  .pay.pay-hook small{font-size:11px;line-height:1.7}
+}
+
+/* Exact fixed reveal and WebGL finale structure from the measured source. */
+main,.footer{position:relative;z-index:1;background:var(--paper)}
+.footer{overflow:visible}
+.finale-dither{
+  width:calc(100% + 24px);height:clamp(72px,11vh,132px);margin-top:clamp(28px,5vh,56px);
+  pointer-events:none;background:linear-gradient(90deg,#f3a25c,#fb7d3a 50%,#6d92dd);
+  -webkit-mask-image:url("dither-fade.svg");mask-image:url("dither-fade.svg");
+  -webkit-mask-repeat:repeat-x;mask-repeat:repeat-x;-webkit-mask-position:bottom left;mask-position:bottom left;
+  -webkit-mask-size:24px 100%;mask-size:24px 100%
+}
+.end.brand-finale{--finale-h:clamp(360px,52vh,620px);position:relative;z-index:0;display:block;height:var(--finale-h);margin:0;background:transparent;overflow:visible}
+.finale-band-local{
+  position:fixed;left:0;right:0;bottom:0;z-index:0;width:100%;height:var(--finale-h);margin:0;overflow:hidden;
+  background:radial-gradient(120% 90% at 50% 55%,#17100a 0,#070504 70%)
+}
+.finale-band-local .dim-gl{position:absolute;inset:0;z-index:1;width:100%;height:100%;display:block;margin:0}
+.finale-band-local .dim-tx{
+  position:relative;z-index:3;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:16px;padding:0 4%;text-align:center;pointer-events:none;text-shadow:none
+}
+.finale-copy .dim-kick,.finale-copy .eyebrow{
+  display:inline-flex;align-items:center;gap:8px;height:auto;padding:5px 12px;border:1px solid rgba(255,240,220,.22);
+  border-radius:0;background:rgba(255,251,244,.08);color:rgba(255,244,226,.72);
+  font:500 10px/15px var(--mono);letter-spacing:.14em;text-transform:uppercase
+}
+.finale-copy .dim-title,.finale-copy h2{
+  margin:0;padding:0;color:#fffaf2;font-size:clamp(24px,3.6vw,42px);font-weight:700;line-height:1.5;
+  letter-spacing:-.01em;text-shadow:0 2px 30px rgba(0,0,0,.55)
+}
+.finale-copy:before{left:50%;top:50%;width:108px;height:108px;transform:translate(-50%,-72%);opacity:.1;z-index:0}
+.finale-copy .dim-kick,.finale-copy .dim-title{position:relative;z-index:1}
+.finale-band-local.no-gl .dim-gl{display:none}
+@media(max-width:760px){
+  .end.brand-finale,.finale-band-local{--finale-h:clamp(220px,34vh,340px)}
+  .finale-dither{height:64px;margin-top:16px}
+  .finale-band-local .dim-tx{gap:16px;padding-inline:20px}
+  .finale-copy .dim-title,.finale-copy h2{font-size:24px;line-height:1.5;white-space:nowrap}
+  .finale-copy:before{width:82px;height:82px;transform:translate(-50%,-68%);opacity:.09}
+}
+@media(max-width:380px){.finale-copy .dim-title,.finale-copy h2{font-size:22px}}
+@media(prefers-reduced-motion:reduce){
+  .pay.pay-hook h2 .grad{animation:none}.pay-primary,.pay-fill,.pay-knob{transition:none!important}.pay-primary:hover .pay-knob{animation:none}
+}

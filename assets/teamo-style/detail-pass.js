@@ -237,22 +237,31 @@
     };
     const formatDate = date => `${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}`;
     const locale = () => document.documentElement.lang || 'zh-CN';
+    const waveForDay = day => Math.sin(day * 1.71) * .085 + Math.cos(day * .63) * .045 + Math.sin(day * .19) * .025;
 
     function series() {
-      return Array.from({ length: 30 }, (_, index) => {
+      const todayWave = waveForDay(today);
+      const data = Array.from({ length: 30 }, (_, index) => {
         const distance = 29 - index;
-        const date = new Date((today - distance) * DAY);
-        const total = todayTotal - distance * dailyGain;
-        const wave = ((today - distance) % 7 + 7) % 7;
-        const weights = [.52 + wave * .004, .255 - wave * .003, .075, .052, .036, .024 + (wave % 3) * .004, .038];
+        const day = today - distance;
+        const date = new Date(day * DAY);
+        const baseline = todayTotal - distance * dailyGain;
+        const progress = index / 29;
+        const fluctuation = waveForDay(day) - todayWave * Math.pow(progress, 2.4);
+        const total = Math.max(baseline * .72, baseline * (1 + fluctuation));
+        const week = ((day % 7) + 7) % 7;
+        const weights = [.52 + week * .004, .255 - week * .003, .075, .052, .036, .024 + (week % 3) * .004, .038];
         const sum = weights.reduce((a, b) => a + b, 0);
         return { date, total, weights: weights.map(value => value / sum) };
       });
+      data[29].total = todayTotal;
+      if (data[28].total >= todayTotal) data[28].total = todayTotal * .971;
+      return data;
     }
 
-    function renderChart() {
-      const data = series();
-      const axisMax = Math.ceil(todayTotal / 400_000_000_000) * 400_000_000_000;
+    function renderChart(data = series()) {
+      const peak = Math.max(todayTotal, ...data.map(day => day.total));
+      const axisMax = Math.ceil(peak / 400_000_000_000) * 400_000_000_000;
       const axis = $('#usageYAxis');
       if (axis) axis.innerHTML = [axisMax, axisMax * 2 / 3, axisMax / 3, 0].map(formatAxis).map(value => `<span>${value}</span>`).join('');
       const mobile = matchMedia('(max-width: 640px)').matches;
@@ -294,12 +303,14 @@
 
     function render(nextCopy) {
       if (nextCopy?.length) copy = [...nextCopy.slice(0, 3), ...nextCopy.slice(3)];
-      const yesterday = todayTotal - dailyGain;
+      const data = series();
+      const yesterday = data.at(-2).total;
+      const dailyChange = (todayTotal - yesterday) / yesterday * 100;
       $('#usageTotal').textContent = formatToken(todayTotal);
-      $('#usageGrowth').innerHTML = `↗ ${(dailyGain / yesterday * 100).toFixed(1)}% <em>${locale().startsWith('zh') ? '较昨日' : 'vs yesterday'}</em>`;
+      $('#usageGrowth').innerHTML = `${dailyChange >= 0 ? '↗' : '↘'} ${Math.abs(dailyChange).toFixed(1)}% <em>${locale().startsWith('zh') ? '较昨日' : 'vs yesterday'}</em>`;
       const updated = new Intl.DateTimeFormat(locale(), { year: 'numeric', month: '2-digit', day: '2-digit' }).format(now);
       $('#rankingUpdated').textContent = `${locale().startsWith('zh') ? '每日 00:00 刷新 · 最后更新' : 'Updated daily at 00:00 · Last update'} ${updated} 00:00`;
-      renderChart();
+      renderChart(data);
       renderLists();
     }
 

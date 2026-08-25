@@ -20,31 +20,82 @@
   const hamburger = $('#hamb');
   if (hamburger) hamburger.innerHTML = '<svg class="ic-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"></path></svg><svg class="ic-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>';
 
+  $$('.brand img, .core img').forEach(img => {
+    img.src = 'assets/teamo-style/logo-suxin.png';
+    img.alt = 'suxin';
+    const size = innerWidth <= 900 ? 22 : 25;
+    img.style.width = `${size}px`;
+    img.style.height = `${size}px`;
+    img.style.objectFit = 'contain';
+  });
+  const footerLogo = $('.footbrand .brand img');
+  if (footerLogo) {
+    footerLogo.src = 'assets/teamo-style/logo-suxin-white.png';
+    footerLogo.style.width = '27px';
+    footerLogo.style.height = '27px';
+  }
+
   const heroTitle = $('.hero h1');
-  const titleFrames = [
-    [{ text: '专用于生产环境的', grad: '生产环境' }, { text: '统一大模型网关' }],
-    [{ text: 'Agent 接入', grad: 'Agent' }, { text: '大模型的统一入口' }]
+  const defaultTitleFrames = [
+    [{ text: 'Agent 接入', grad: 'Agent' }, { text: '大模型的统一入口' }],
+    [{ text: '专用于生产环境的', grad: '生产环境' }, { text: '统一大模型网关' }]
   ];
-  let titleIndex = 1;
   function chars(text, gradWord = '') {
     const start = gradWord ? text.indexOf(gradWord) : -1;
     return [...text].map((char, i) => {
       const inGrad = start >= 0 && i >= start && i < start + [...gradWord].length;
       const cls = `hero-title-char${char === ' ' ? ' space' : ''}${inGrad ? ' grad' : ''}`;
-      return `<span class="${cls}" style="animation-delay:${i * 23}ms">${char === ' ' ? '&nbsp;' : char}</span>`;
+      return `<span class="${cls}">${char === ' ' ? '&nbsp;' : char}</span>`;
     }).join('');
   }
-  function renderTitle() {
+  function renderHeroTitle(titleFrames) {
     if (!heroTitle) return;
-    const frame = titleFrames[titleIndex];
-    heroTitle.setAttribute('aria-label', frame.map(x => x.text).join(' '));
-    heroTitle.innerHTML = frame.map(line => `<span class="hero-title-line">${chars(line.text, line.grad)}</span>`).join('');
+    window.__heroTitleMedia?.revert?.();
+    window.__heroTitleTimeline?.kill?.();
+    heroTitle.className = 'hero-title-gsap';
+    heroTitle.innerHTML = titleFrames.map((frame, frameIndex) =>
+      `<span class="hero-title-frame" data-frame="${frameIndex}">${frame.map(line => `<span class="hero-title-line">${chars(line.text, line.grad)}</span>`).join('')}</span>`
+    ).join('');
+    const frames = $$('.hero-title-frame', heroTitle);
+    const setAccessibleTitle = index => heroTitle.setAttribute('aria-label', titleFrames[index].map(line => line.text).join(' '));
+    setAccessibleTitle(0);
+
+    if (window.gsap) {
+      heroTitle.dataset.gsap = window.gsap.version || 'loaded';
+      const titleMedia = gsap.matchMedia();
+      titleMedia.add({ reduceMotion: '(prefers-reduced-motion: reduce)', motionOK: '(prefers-reduced-motion: no-preference)' }, context => {
+        const { reduceMotion } = context.conditions;
+        gsap.set(frames, { autoAlpha: 0 });
+        gsap.set(frames[0], { autoAlpha: 1 });
+        if (reduceMotion) return;
+
+        const timeline = gsap.timeline({ repeat: -1, defaults: { overwrite: 'auto' }, onStart: () => heroTitle.dataset.gsapState = 'running' });
+        frames.forEach((frame, index) => {
+          const letters = $$('.hero-title-char', frame);
+          timeline
+            .set(frame, { autoAlpha: 1 })
+            .call(() => setAccessibleTitle(index))
+            .fromTo(letters,
+              { autoAlpha: 0, y: 22, rotationX: -62, transformOrigin: '50% 100%' },
+              { autoAlpha: 1, y: 0, rotationX: 0, duration: .68, stagger: { each: .024, from: 'start' }, ease: 'power3.out', immediateRender: false }
+            )
+            .to({}, { duration: 2.45 })
+            .to(letters,
+              { autoAlpha: 0, y: -17, rotationX: 48, duration: .38, stagger: { each: .014, from: 'end' }, ease: 'power2.in' }
+            )
+            .set(frame, { autoAlpha: 0 });
+        });
+        window.__heroTitleTimeline = timeline;
+        return () => { timeline.kill(); delete window.__heroTitleTimeline; };
+      });
+      window.__heroTitleMedia = titleMedia;
+    } else {
+      heroTitle.dataset.gsap = 'fallback';
+      frames.forEach((frame, index) => frame.style.visibility = index ? 'hidden' : 'visible');
+    }
   }
-  renderTitle();
-  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) setInterval(() => {
-    heroTitle?.classList.add('hero-title-out');
-    setTimeout(() => { titleIndex = (titleIndex + 1) % titleFrames.length; heroTitle?.classList.remove('hero-title-out'); renderTitle(); }, 300);
-  }, 4300);
+  renderHeroTitle(defaultTitleFrames);
+  window.__setHeroTitleFrames = renderHeroTitle;
 
   const heroCtas = $$('.hero-buttons .btn');
   if (heroCtas[0]) heroCtas[0].innerHTML = '<img class="key-icon" src="assets/teamo-style/key.webp" alt="">获取 API Key';
@@ -57,7 +108,7 @@
     <div class="route-node model-1" data-side="left"><img src="assets/teamo-style/anthropic.svg" alt=""><span>Claude</span></div>
     <div class="route-node model-2" data-side="left"><img src="assets/teamo-style/openai.svg" alt=""><span>GPT</span></div>
     <div class="route-node model-3" data-side="left"><img src="assets/teamo-style/google.svg" alt=""><span>Gemini</span></div>
-    <div class="route-hub"><span class="route-hub-ring"><img src="assets/teamo-style/logo-mark.svg" alt=""></span><b>智能调度</b></div>
+    <div class="route-hub"><span class="route-hub-ring"><img src="assets/teamo-style/logo-suxin.png" alt="suxin" style="width:31px;height:31px;object-fit:contain"></span><b>智能调度</b></div>
     <div class="route-node client-1" data-side="right"><img src="assets/teamo-style/anthropic.svg" alt=""><span>Claude Code</span></div>
     <div class="route-node client-2" data-side="right"><img src="assets/teamo-style/openai.svg" alt=""><span>Codex</span></div>
     <div class="route-node client-3" data-side="right"><img src="assets/teamo-style/cc-switch.webp" alt=""><span>CC Switch</span></div>
@@ -127,4 +178,104 @@
     resize(); draw(performance.now()); addEventListener('resize', () => { cancelAnimationFrame(raf); resize(); draw(performance.now()); }, {passive:true});
   }
   startRouteCanvas();
+
+  function startSectionReveals() {
+    const root = document.documentElement;
+    if (!window.gsap || !window.ScrollTrigger) {
+      root.dataset.scrollTrigger = 'fallback';
+      return;
+    }
+
+    gsap.registerPlugin(ScrollTrigger);
+    root.dataset.scrollTrigger = ScrollTrigger.version || 'loaded';
+
+    const revealGroups = [
+      { section: '.proof', items: ['.proofgrid > div', '.social'] },
+      { section: '#pricing', items: ['.head > *', '.price', '.center', '.stat'] },
+      { section: '.pay', items: ['.pay > div > *'] },
+      { section: '#quickstart', items: ['.head > *', '.aside > *', '.quick > div:last-child'] },
+      { section: '.metrics', host: 'section', items: ['.head > *', '.metric'] },
+      { section: '.trust', host: 'section', items: ['.trust > div > h3', '.trust > div > p', '.trustcard'] },
+      { section: '.routebox', host: 'section', items: ['.routecopy > *', '.routedemo'] },
+      { section: '#live', items: ['.head > *', '.tools > *', '.live > *'] },
+      { section: '#ranking', items: ['.head > *', '.rank'] },
+      { section: '.buy', items: ['.buy .shell > *'] },
+      { section: '#faq', items: ['.head > *', '.faq'] },
+      { section: '.footer', items: ['.footbrand', '.footlinks > div', '.end > div'] }
+    ];
+
+    const revealMedia = gsap.matchMedia();
+    revealMedia.add({
+      reduceMotion: '(prefers-reduced-motion: reduce)',
+      motionOK: '(prefers-reduced-motion: no-preference)',
+      isDesktop: '(min-width: 901px)',
+      isMobile: '(max-width: 900px)'
+    }, context => {
+      const { reduceMotion, isMobile } = context.conditions;
+
+      revealGroups.forEach((group, index) => {
+        const anchor = $(group.section);
+        if (!anchor) return;
+        const section = group.host ? anchor.closest(group.host) : anchor;
+        const items = [...new Set(group.items.flatMap(selector => $$(selector, section)))];
+        if (!items.length) return;
+
+        section.dataset.scrollReveal = `section-${index + 1}`;
+        section.dataset.revealState = reduceMotion ? 'reduced-motion' : 'ready';
+
+        if (reduceMotion) {
+          gsap.set(items, { clearProps: 'opacity,visibility,transform' });
+          return;
+        }
+
+        const prepare = () => items.forEach(item => { item.style.willChange = 'transform, opacity'; });
+        const release = () => items.forEach(item => { item.style.removeProperty('will-change'); });
+        const lead = items.slice(0, Math.min(2, items.length));
+        const rest = items.slice(lead.length);
+        const shift = isMobile ? 25 : 38;
+
+        const timeline = gsap.timeline({
+          defaults: { duration: isMobile ? .56 : .68, ease: 'power3.out' },
+          scrollTrigger: {
+            trigger: section,
+            start: 'top 84%',
+            end: 'bottom 12%',
+            toggleActions: 'play reverse play reverse',
+            invalidateOnRefresh: true,
+            onEnter: () => { prepare(); section.dataset.revealState = 'entered'; },
+            onLeave: () => { release(); section.dataset.revealState = 'left'; },
+            onEnterBack: () => { prepare(); section.dataset.revealState = 'entered-back'; },
+            onLeaveBack: () => { release(); section.dataset.revealState = 'reset'; }
+          }
+        });
+
+        timeline.fromTo(lead,
+          { autoAlpha: 0, y: shift },
+          { autoAlpha: 1, y: 0, stagger: .09, immediateRender: true }
+        );
+        if (rest.length) {
+          timeline.fromTo(rest,
+            { autoAlpha: 0, y: shift * .8, scale: .988 },
+            { autoAlpha: 1, y: 0, scale: 1, stagger: { each: isMobile ? .055 : .075, from: 'start' }, immediateRender: true },
+            '-=.34'
+          );
+        }
+        timeline.eventCallback('onComplete', release);
+        timeline.eventCallback('onReverseComplete', release);
+      });
+
+      return () => {
+        $$('[data-scroll-reveal]').forEach(section => {
+          delete section.dataset.scrollReveal;
+          delete section.dataset.revealState;
+        });
+      };
+    });
+
+    const refresh = () => requestAnimationFrame(() => ScrollTrigger.refresh());
+    if (document.fonts?.ready) document.fonts.ready.then(refresh);
+    window.addEventListener('load', refresh, { once: true });
+    window.__sectionRevealMedia = revealMedia;
+  }
+  startSectionReveals();
 })();

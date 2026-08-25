@@ -12,3 +12,8 @@
 @media(max-width:420px){.brand span{font-size:17px}.actions .btn{font-size:12px}.hero h1{font-size:38px}.endpoint code{font-size:10.5px}.proofgrid>div{font-size:11px}.route-node span{display:none}.route-node{border-radius:50%;padding:7px}}
 @media(prefers-reduced-motion:reduce){.hero-title-char,.hero-title-out .hero-title-char,.route-hub-ring{animation:none!important}}
 @media(min-width:901px){.hero{min-height:900px}.hero-copy{margin-top:44px}.routes{height:430px}}
+.hero h1.hero-title-gsap{position:relative;width:clamp(405px,31vw,444px);height:126px;min-height:126px;margin:20px auto 23px;font-size:clamp(44px,4vw,56px);font-weight:600;line-height:1.1;letter-spacing:-.012em;perspective:700px;text-wrap:balance}.hero-title-frame{position:absolute;inset:0;display:grid;align-content:center;visibility:hidden}.hero-title-line{display:block;height:1.1em;white-space:nowrap}.hero-title-char{display:inline-block;animation:none;will-change:transform,opacity;backface-visibility:hidden}.hero-title-char.space{width:.28em}
+@media(max-width:900px){.hero h1.hero-title-gsap{width:100%;height:92px;min-height:92px;margin:15px auto 18px;font-size:clamp(36px,10.25vw,40px);line-height:1.08;letter-spacing:-.012em}.hero-title-line{height:1.08em}}
+@media(prefers-reduced-motion:reduce){.hero-title-char{will-change:auto}}
+.brand img{width:25px;height:25px;object-fit:contain}.footbrand .brand img{width:27px;height:27px}.route-hub-ring img{width:31px;height:31px;object-fit:contain}.core img{width:25px;height:25px;object-fit:contain}
+@media(max-width:900px){.brand img{width:22px;height:22px}.route-hub-ring img{width:23px;height:23px}}

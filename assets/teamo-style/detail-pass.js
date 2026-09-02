@@ -8,7 +8,7 @@
     ['模型广场', 'https://suxintoken.com/pricing'],
     ['排行榜', 'https://suxintoken.com/rankings'],
     ['文档', 'https://docs.newapi.pro'],
-    ['关于', 'https://suxintoken.com/about'],
+    ['群聊', 'https://token.macosabc.com/chat'],
     ['邀请返现', 'https://suxintoken.com/wallet']
   ];
   const links = $('#links');

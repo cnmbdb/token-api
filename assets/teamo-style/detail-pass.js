@@ -3,20 +3,20 @@
   const $$ = (s, p = document) => [...p.querySelectorAll(s)];
 
   const navItems = [
-    ['主页', 'https://suxintoken.com/'],
-    ['控制台', 'https://suxintoken.com/dashboard'],
-    ['模型广场', 'https://suxintoken.com/pricing'],
-    ['排行榜', 'https://suxintoken.com/rankings'],
+    ['主页', 'https://token.hfz.pw/'],
+    ['控制台', 'https://token.hfz.pw/dashboard'],
+    ['模型广场', 'https://token.hfz.pw/pricing'],
+    ['排行榜', 'https://token.hfz.pw/rankings'],
     ['文档', 'https://docs.newapi.pro'],
     ['群聊', 'https://token.macosabc.com/chat'],
-    ['邀请返现', 'https://suxintoken.com/wallet']
+    ['邀请返现', 'https://token.hfz.pw/wallet']
   ];
   const links = $('#links');
-  if (links) links.innerHTML = `<div class="nav-sheet-head"><span class="nav-grip" aria-hidden="true"></span><a class="nav-login-m" href="https://suxintoken.com/sign-in">开始使用</a></div>${navItems.map(([label, href], i) =>
+  if (links) links.innerHTML = `<div class="nav-sheet-head"><span class="nav-grip" aria-hidden="true"></span><a class="nav-login-m" href="https://token.hfz.pw/sign-in">开始使用</a></div>${navItems.map(([label, href], i) =>
     `<a class="nav-menu-item${i === 0 ? ' is-active' : ''}" href="${href}">${label}${i === navItems.length - 1 ? '<img class="nav-gift" src="assets/teamo-style/gift-badge.webp" alt="">' : ''}</a>`
   ).join('')}`;
 
-  $$('.actions .btn').forEach(button => { button.href = 'https://suxintoken.com/sign-in'; });
+  $$('.actions .btn').forEach(button => { button.href = 'https://token.hfz.pw/sign-in'; });
 
   const globe = $('.globe');
   if (globe) {
@@ -444,7 +444,7 @@
   // General CTA navigation enters the new-api authentication flow. Pure
   // interaction controls and menu-specific destinations remain unchanged.
   $$('a.btn, a.cardcta, a.option, .qs-other a, a.nav-login-m').forEach(link => {
-    link.href = 'https://suxintoken.com/sign-in';
+    link.href = 'https://token.hfz.pw/sign-in';
   });
   startSectionReveals();
 })();

@@ -7,27 +7,27 @@
   $$('.option-icon').forEach((slot, index) => { slot.innerHTML = `<img src="assets/teamo-style/${quickIcons[index]}" alt="">`; });
 
   const codeSamples = {
-    Python: ['main.py', `from openai import OpenAI\n\nclient = OpenAI(\n  base_url="https://suxin.ai/v1",\n  api_key="$SUXIN_API_KEY",\n)\n\nresponse = client.chat.completions.create(\n  model="gpt-5.6-sol",\n  messages=[{"role": "user", "content": "Hello"}],\n)`],
-    TypeScript: ['index.ts', `import OpenAI from "openai";\n\nconst client = new OpenAI({\n  baseURL: "https://suxin.ai/v1",\n  apiKey: process.env.SUXIN_API_KEY,\n});`],
-    curl: ['request.sh', `curl https://suxin.ai/v1/chat/completions \\\n  -H "Authorization: Bearer $SUXIN_API_KEY" \\\n  -H "Content-Type: application/json"`],
-    Go: ['main.go', `client := openai.NewClient("$SUXIN_API_KEY")\nclient.BaseURL = "https://suxin.ai/v1"`],
-    Java: ['Main.java', `OpenAIClient client = OpenAIOkHttpClient.builder()\n  .baseUrl("https://suxin.ai/v1")\n  .apiKey(System.getenv("SUXIN_API_KEY"))\n  .build();`],
-    Rust: ['main.rs', `let client = Client::builder()\n  .with_api_base("https://suxin.ai/v1")\n  .with_api_key(env::var("SUXIN_API_KEY")?)\n  .build()?;`],
-    PHP: ['index.php', `$client = OpenAI::factory()\n  ->withApiKey(getenv('SUXIN_API_KEY'))\n  ->withBaseUri('https://suxin.ai/v1')\n  ->make();`],
-    Ruby: ['main.rb', `client = OpenAI::Client.new(\n  access_token: ENV["SUXIN_API_KEY"],\n  uri_base: "https://suxin.ai/v1"\n)`]
+    Python: ['main.py', `from openai import OpenAI\n\nclient = OpenAI(\n  base_url="https://token.hfz.pw/v1",\n  api_key="$SUXIN_API_KEY",\n)\n\nresponse = client.chat.completions.create(\n  model="gpt-5.6-sol",\n  messages=[{"role": "user", "content": "Hello"}],\n)`],
+    TypeScript: ['index.ts', `import OpenAI from "openai";\n\nconst client = new OpenAI({\n  baseURL: "https://token.hfz.pw/v1",\n  apiKey: process.env.SUXIN_API_KEY,\n});`],
+    curl: ['request.sh', `curl https://token.hfz.pw/v1/chat/completions \\\n  -H "Authorization: Bearer $SUXIN_API_KEY" \\\n  -H "Content-Type: application/json"`],
+    Go: ['main.go', `client := openai.NewClient("$SUXIN_API_KEY")\nclient.BaseURL = "https://token.hfz.pw/v1"`],
+    Java: ['Main.java', `OpenAIClient client = OpenAIOkHttpClient.builder()\n  .baseUrl("https://token.hfz.pw/v1")\n  .apiKey(System.getenv("SUXIN_API_KEY"))\n  .build();`],
+    Rust: ['main.rs', `let client = Client::builder()\n  .with_api_base("https://token.hfz.pw/v1")\n  .with_api_key(env::var("SUXIN_API_KEY")?)\n  .build()?;`],
+    PHP: ['index.php', `$client = OpenAI::factory()\n  ->withApiKey(getenv('SUXIN_API_KEY'))\n  ->withBaseUri('https://token.hfz.pw/v1')\n  ->make();`],
+    Ruby: ['main.rb', `client = OpenAI::Client.new(\n  access_token: ENV["SUXIN_API_KEY"],\n  uri_base: "https://token.hfz.pw/v1"\n)`]
   };
   const cliSamples = {
     claude: {
-      unix: `# Route Claude Code through suxin\nexport ANTHROPIC_BASE_URL="https://suxin.ai"\nexport ANTHROPIC_AUTH_TOKEN="$SUXIN_API_KEY"\nclaude`,
-      windows: `# PowerShell\n$env:ANTHROPIC_BASE_URL="https://suxin.ai"\n$env:ANTHROPIC_AUTH_TOKEN=$env:SUXIN_API_KEY\nclaude`
+      unix: `# Route Claude Code through suxin\nexport ANTHROPIC_BASE_URL="https://token.hfz.pw"\nexport ANTHROPIC_AUTH_TOKEN="$SUXIN_API_KEY"\nclaude`,
+      windows: `# PowerShell\n$env:ANTHROPIC_BASE_URL="https://token.hfz.pw"\n$env:ANTHROPIC_AUTH_TOKEN=$env:SUXIN_API_KEY\nclaude`
     },
     codex: {
-      unix: `# Route Codex CLI through suxin\nexport OPENAI_BASE_URL="https://suxin.ai/v1"\nexport OPENAI_API_KEY="$SUXIN_API_KEY"\ncodex`,
-      windows: `# PowerShell\n$env:OPENAI_BASE_URL="https://suxin.ai/v1"\n$env:OPENAI_API_KEY=$env:SUXIN_API_KEY\ncodex`
+      unix: `# Route Codex CLI through suxin\nexport OPENAI_BASE_URL="https://token.hfz.pw/v1"\nexport OPENAI_API_KEY="$SUXIN_API_KEY"\ncodex`,
+      windows: `# PowerShell\n$env:OPENAI_BASE_URL="https://token.hfz.pw/v1"\n$env:OPENAI_API_KEY=$env:SUXIN_API_KEY\ncodex`
     },
     kimi: {
-      unix: `# Route Kimi Code through suxin\nexport OPENAI_BASE_URL="https://suxin.ai/v1"\nexport OPENAI_API_KEY="$SUXIN_API_KEY"\nkimi`,
-      windows: `# PowerShell\n$env:OPENAI_BASE_URL="https://suxin.ai/v1"\n$env:OPENAI_API_KEY=$env:SUXIN_API_KEY\nkimi`
+      unix: `# Route Kimi Code through suxin\nexport OPENAI_BASE_URL="https://token.hfz.pw/v1"\nexport OPENAI_API_KEY="$SUXIN_API_KEY"\nkimi`,
+      windows: `# PowerShell\n$env:OPENAI_BASE_URL="https://token.hfz.pw/v1"\n$env:OPENAI_API_KEY=$env:SUXIN_API_KEY\nkimi`
     }
   };
 
